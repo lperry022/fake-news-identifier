@@ -1,70 +1,45 @@
-:root {
-  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, 'Apple Color Emoji','Segoe UI Emoji';
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* Typography + background */
+html, body { @apply h-full font-sans bg-slate-950 text-slate-100 antialiased; }
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* Subtle radial glow behind header like HIBP */
+body::before{
+  content:"";
+  position:fixed; inset:0; z-index:-1;
+  background:
+    radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,.18), transparent 65%),
+    radial-gradient(800px 400px at 70% 5%, rgba(99,102,241,.12), transparent 60%);
 }
 
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
+/* Reusable components */
+@layer components {
+  .container-page { @apply container max-w-6xl; }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+  .card { @apply rounded-3xl border border-slate-800 bg-slate-900/70 shadow-glass; }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+  .tile { @apply rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center shadow-soft; }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+  .input {
+    @apply w-full rounded-pill border border-slate-800 bg-slate-950/60 px-5 py-3.5
+    text-slate-100 placeholder:text-slate-400 outline-none focus:border-brand-400/60 focus:ring-2 focus:ring-brand-500/30;
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-html { font-family: var(--font-sans); }
 
+  .btn { @apply inline-flex items-center justify-center rounded-pill font-semibold transition; }
+  .btn-primary { @apply btn border border-brand-400/60 bg-brand-600/90 hover:bg-brand-500 px-6 py-3.5 shadow-soft; }
+  .btn-ghost   { @apply btn border border-slate-700/70 hover:border-brand-400/60 px-3 py-1.5; }
+
+  .pill { @apply rounded-pill px-3 py-1 text-sm ring-1; }
+  .pill-green { @apply pill bg-emerald-500/15 text-emerald-300 ring-emerald-500/30; }
+  .pill-amber { @apply pill bg-amber-500/15 text-amber-300 ring-amber-500/30; }
+  .pill-rose  { @apply pill bg-rose-500/15  text-rose-300  ring-rose-500/30; }
+}
+
+/* Optional: nicer scrollbars on desktop */
+@media (pointer: fine) {
+  *::-webkit-scrollbar{ width:10px; height:10px }
+  *::-webkit-scrollbar-thumb{ background:#0f172a; border:2px solid #0b1220; border-radius:9999px }
+  *::-webkit-scrollbar-thumb:hover{ background:#111827 }
+}
