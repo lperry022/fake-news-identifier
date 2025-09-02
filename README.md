@@ -1,2 +1,36 @@
-# fake-news-identifier
-Fake News Identifier is a web-based tool that lets users enter a news headline or link and get a credibility score.
+# Fake News Identifier
+
+A web-based tool that allows users to paste a news headline or URL and receive a credibility score with clear explanations and flags.  
+This project promotes media literacy by helping users verify online content and reducing the spread of misinformation.  
+
+---
+
+## Frontend
+
+The frontend is built with **React + Vite** and styled using **TailwindCSS**.  
+It delivers a fast and responsive interface inspired by modern verification tools, but redesigned with a custom brand identity.
+
+### Features
+- Clean landing page with gradient hero section
+- Input field for pasting headlines or URLs
+- Button to check credibility (connected to backend API)
+- Stats counters showing demo values
+- Footer with project details, API docs, and workflow explanation
+- Responsive design with custom components (`card`, `pill`, `tile`)
+
+---
+
+## Backend
+
+*(To be filled out by the backend team)*
+
+---
+
+## Authors
+
+- **Liana Perry** — Frontend Developer, Scrum Master Sprint 1  
+- **Hashaam Khan** — Backend Developer, Scrum Master Sprint 2  
+- **Meetkumar Kiranbhai Parmar** — Backend Developer  
+- **Rubalpreet Singh** — Backend Developer  
+
+---
