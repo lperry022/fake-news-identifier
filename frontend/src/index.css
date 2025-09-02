@@ -1,45 +1,57 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* --- Tailwind v4 entry --- */
+@import "tailwindcss";
+@reference "tailwindcss";
 
-/* Typography + background */
-html, body { @apply h-full font-sans bg-slate-950 text-slate-100 antialiased; }
+/* Base look */
+html, body {
+  @apply h-full bg-slate-950 text-slate-100 font-sans antialiased;
+}
 
-/* Subtle radial glow behind header like HIBP */
+/* Reusable components */
+@layer components {
+  .container-page { @apply container max-w-6xl mx-auto px-4; }
+
+  .card  { @apply rounded-3xl border border-slate-800 bg-slate-900/70 shadow-[0_8px_24px_rgba(2,6,23,.55)]; }
+  .tile  { @apply rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center shadow-[0_6px_20px_rgba(2,6,23,.35)]; }
+
+  .input {
+    @apply w-full rounded-full border border-slate-800 bg-slate-950/60 px-5 py-3.5
+           text-slate-100 placeholder:text-slate-400 outline-none
+           focus:border-sky-400/60 focus:ring-2 focus:ring-sky-500/30;
+  }
+
+  /* Buttons (expanded; no @apply to custom classes) */
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full font-semibold transition
+           border border-sky-400/60 bg-sky-600/90 hover:bg-sky-500 px-6 py-3.5;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full font-semibold transition
+           border border-slate-700/70 hover:border-sky-400/60 px-3 py-1.5;
+  }
+
+.pill       { @apply rounded-full px-3 py-1 text-sm ring-1; }
+
+.pill-green {
+  @apply rounded-full px-3 py-1 text-sm ring-1
+         bg-emerald-500/15 text-emerald-300 ring-emerald-500/30;
+}
+.pill-amber {
+  @apply rounded-full px-3 py-1 text-sm ring-1
+         bg-amber-500/15 text-amber-300 ring-amber-500/30;
+}
+.pill-rose  {
+  @apply rounded-full px-3 py-1 text-sm ring-1
+         bg-rose-500/15  text-rose-300  ring-rose-500/30;
+}
+
+}
+
+/* Subtle header glow like HIBP */
 body::before{
   content:"";
   position:fixed; inset:0; z-index:-1;
   background:
     radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,.18), transparent 65%),
     radial-gradient(800px 400px at 70% 5%, rgba(99,102,241,.12), transparent 60%);
-}
-
-/* Reusable components */
-@layer components {
-  .container-page { @apply container max-w-6xl; }
-
-  .card { @apply rounded-3xl border border-slate-800 bg-slate-900/70 shadow-glass; }
-
-  .tile { @apply rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center shadow-soft; }
-
-  .input {
-    @apply w-full rounded-pill border border-slate-800 bg-slate-950/60 px-5 py-3.5
-    text-slate-100 placeholder:text-slate-400 outline-none focus:border-brand-400/60 focus:ring-2 focus:ring-brand-500/30;
-  }
-
-  .btn { @apply inline-flex items-center justify-center rounded-pill font-semibold transition; }
-  .btn-primary { @apply btn border border-brand-400/60 bg-brand-600/90 hover:bg-brand-500 px-6 py-3.5 shadow-soft; }
-  .btn-ghost   { @apply btn border border-slate-700/70 hover:border-brand-400/60 px-3 py-1.5; }
-
-  .pill { @apply rounded-pill px-3 py-1 text-sm ring-1; }
-  .pill-green { @apply pill bg-emerald-500/15 text-emerald-300 ring-emerald-500/30; }
-  .pill-amber { @apply pill bg-amber-500/15 text-amber-300 ring-amber-500/30; }
-  .pill-rose  { @apply pill bg-rose-500/15  text-rose-300  ring-rose-500/30; }
-}
-
-/* Optional: nicer scrollbars on desktop */
-@media (pointer: fine) {
-  *::-webkit-scrollbar{ width:10px; height:10px }
-  *::-webkit-scrollbar-thumb{ background:#0f172a; border:2px solid #0b1220; border-radius:9999px }
-  *::-webkit-scrollbar-thumb:hover{ background:#111827 }
 }
