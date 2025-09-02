@@ -1,57 +1,61 @@
-/* --- Tailwind v4 entry --- */
+/* --- Tailwind v4 entry + permission to @apply utilities --- */
 @import "tailwindcss";
 @reference "tailwindcss";
+
 
 /* Base look */
 html, body {
   @apply h-full bg-slate-950 text-slate-100 font-sans antialiased;
 }
 
-/* Reusable components */
-@layer components {
-  .container-page { @apply container max-w-6xl mx-auto px-4; }
-
-  .card  { @apply rounded-3xl border border-slate-800 bg-slate-900/70 shadow-[0_8px_24px_rgba(2,6,23,.55)]; }
-  .tile  { @apply rounded-2xl border border-slate-800 bg-slate-900/60 p-6 text-center shadow-[0_6px_20px_rgba(2,6,23,.35)]; }
-
-  .input {
-    @apply w-full rounded-full border border-slate-800 bg-slate-950/60 px-5 py-3.5
-           text-slate-100 placeholder:text-slate-400 outline-none
-           focus:border-sky-400/60 focus:ring-2 focus:ring-sky-500/30;
-  }
-
-  /* Buttons (expanded; no @apply to custom classes) */
-  .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full font-semibold transition
-           border border-sky-400/60 bg-sky-600/90 hover:bg-sky-500 px-6 py-3.5;
-  }
-  .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-full font-semibold transition
-           border border-slate-700/70 hover:border-sky-400/60 px-3 py-1.5;
-  }
-
-.pill       { @apply rounded-full px-3 py-1 text-sm ring-1; }
-
-.pill-green {
-  @apply rounded-full px-3 py-1 text-sm ring-1
-         bg-emerald-500/15 text-emerald-300 ring-emerald-500/30;
-}
-.pill-amber {
-  @apply rounded-full px-3 py-1 text-sm ring-1
-         bg-amber-500/15 text-amber-300 ring-amber-500/30;
-}
-.pill-rose  {
-  @apply rounded-full px-3 py-1 text-sm ring-1
-         bg-rose-500/15  text-rose-300  ring-rose-500/30;
-}
-
-}
-
-/* Subtle header glow like HIBP */
+/* Subtle cyan→fuchsia glow + scan-lines motif (distinct from HIBP) */
 body::before{
   content:"";
   position:fixed; inset:0; z-index:-1;
   background:
-    radial-gradient(1200px 600px at 50% -10%, rgba(37,99,235,.18), transparent 65%),
-    radial-gradient(800px 400px at 70% 5%, rgba(99,102,241,.12), transparent 60%);
+    radial-gradient(1100px 600px at 50% -10%, rgba(34,211,238,.14), transparent 65%),
+    radial-gradient(800px 420px at 70% 5%, rgba(232,121,249,.10), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 3px);
+}
+
+/* Reusable components */
+@layer components {
+  .container-page { @apply container max-w-6xl mx-auto px-4; }
+
+  .card  { @apply rounded-xl border border-slate-800 bg-slate-900/70 shadow-[0_8px_24px_rgba(2,6,23,.55)]; }
+  .tile  { @apply rounded-xl border border-slate-800 bg-slate-900/60 p-6 text-left shadow-[0_6px_20px_rgba(2,6,23,.35)]; }
+  .tile::after{
+    content:"";
+    position:absolute; left:16px; bottom:10px; width:64px; height:3px;
+    background: linear-gradient(90deg, rgba(34,211,238,.9), rgba(232,121,249,.9));
+    border-radius: 9999px;
+  }
+
+  .input {
+    @apply w-full rounded-lg border border-slate-800 bg-slate-950/60 px-5 py-3.5
+           text-slate-100 placeholder:text-slate-400 outline-none
+           focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-500/30;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg font-semibold transition
+           border border-cyan-400/60 bg-cyan-600/90 hover:bg-cyan-500 px-6 py-3.5;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg font-semibold transition
+           border border-slate-700/70 hover:border-cyan-400/60 px-3 py-1.5;
+  }
+
+  .pill-green {
+    @apply rounded-lg px-3 py-1 text-sm ring-1
+           bg-emerald-500/15 text-emerald-300 ring-emerald-500/30;
+  }
+  .pill-amber {
+    @apply rounded-lg px-3 py-1 text-sm ring-1
+           bg-amber-500/15 text-amber-300 ring-amber-500/30;
+  }
+  .pill-rose  {
+    @apply rounded-lg px-3 py-1 text-sm ring-1
+           bg-rose-500/15  text-rose-300  ring-rose-500/30;
+  }
 }
