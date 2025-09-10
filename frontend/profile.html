@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Profile • Fake News Identifier</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="theme-dark">
+  <nav class="nav-glass">
+    <div class="nav-wrapper container">
+      <a href="/" class="brand-logo">Group 11</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a id="logout-link" href="#!">Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container section">
+    <h4>My Profile</h4>
+
+    <div class="card result-card">
+      <div class="card-content white-text">
+        <p><b>Name:</b> <span id="p-name">—</span></p>
+        <p><b>Email:</b> <span id="p-email">—</span></p>
+        <div class="input-field">
+          <input id="p-newname" type="text" placeholder="Update name..." />
+          <label for="p-newname" class="active">Change display name</label>
+        </div>
+        <a id="save-name" class="btn deep-purple">Save</a>
+      </div>
+    </div>
+
+    <div class="card section-block">
+      <div class="card-content">
+        <span class="card-title">Realtime</span>
+        <p id="rt-log" class="grey-text text-lighten-1">Waiting for socket events…</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/profile.js"></script>
+</body>
+</html>

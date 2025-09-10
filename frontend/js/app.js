@@ -135,3 +135,51 @@ btnEl.addEventListener("click", () => analyze(inputEl.value));
 inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") analyze(inputEl.value);
 });
+
+// Materialize init
+document.addEventListener("DOMContentLoaded", () => {
+  M.Modal.init(document.querySelectorAll(".modal"));
+});
+
+// Helpers
+function toast(msg) { M.toast({ html: msg }); }
+
+async function postJSON(url, body) {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    credentials: "include"
+  });
+  if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+  return res.json();
+}
+
+// Login
+const loginBtn = document.getElementById("btn-login");
+if (loginBtn) {
+  loginBtn.addEventListener("click", async () => {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value;
+    try {
+      await postJSON(`${API_BASE}/auth/login`, { email, password });
+      toast("Logged in!");
+      location.href = "/profile.html";
+    } catch (e) { toast(e.message || "Login failed"); }
+  });
+}
+
+// Register
+const registerBtn = document.getElementById("btn-register");
+if (registerBtn) {
+  registerBtn.addEventListener("click", async () => {
+    const name = document.getElementById("reg-name").value.trim();
+    const email = document.getElementById("reg-email").value.trim();
+    const password = document.getElementById("reg-password").value;
+    try {
+      await postJSON(`${API_BASE}/auth/register`, { name, email, password });
+      toast("Account created. You're in!");
+      location.href = "/profile.html";
+    } catch (e) { toast(e.message || "Registration failed"); }
+  });
+}

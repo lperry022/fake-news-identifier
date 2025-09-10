@@ -152,8 +152,33 @@
     <div class="container">© 2025 Group 11 · Fake News Identifier · Built with Materialize & Vanilla JS</div>
   </footer>
 
+  <!-- Auth Modals -->
+<div id="modal-login" class="modal">
+  <div class="modal-content">
+    <h5>Log in</h5>
+    <div class="input-field"><input id="login-email" type="email" required><label for="login-email">Email</label></div>
+    <div class="input-field"><input id="login-password" type="password" required><label for="login-password">Password</label></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" id="btn-login" class="modal-close btn deep-purple">Log in</a>
+  </div>
+</div>
+
+<div id="modal-register" class="modal">
+  <div class="modal-content">
+    <h5>Create account</h5>
+    <div class="input-field"><input id="reg-name" type="text" required><label for="reg-name">Name</label></div>
+    <div class="input-field"><input id="reg-email" type="email" required><label for="reg-email">Email</label></div>
+    <div class="input-field"><input id="reg-password" type="password" required><label for="reg-password">Password</label></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" id="btn-register" class="modal-close btn deep-purple">Register</a>
+  </div>
+</div>
   <!-- Materialize JS + init -->
+   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       M.Sidenav.init(document.querySelectorAll('.sidenav'));
