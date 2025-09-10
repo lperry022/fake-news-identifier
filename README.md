@@ -6,8 +6,6 @@ This project promotes **media literacy** by helping users verify online content 
 ---
 
 ## Frontend 🎨
-
-Built with **React + Vite** and styled using **TailwindCSS**.  
 The interface is simple, responsive, and designed with a modern look.
 
 ### Features
