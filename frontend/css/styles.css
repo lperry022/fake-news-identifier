@@ -9,22 +9,20 @@
   --bg-2:#1a0f3a;
 
   --card:#170c33cc;
-  --card-start:#130a2e;   /* darker top of cards */
-  --card-end:#1a0f35;     /* darker bottom of cards */
+  --card-start:#130a2e;   
+  --card-end:#1a0f35;     
 
   --border:#a78bfa40;
   --text:#ffffff;
   --muted:#c4b5fd;
 
-  --p1:#7c3aed;           /* purple primary */
-  --p2:#a78bfa;           /* light purple */
+  --p1:#7c3aed;           
+  --p2:#a78bfa;           
 
-  /* Accents */
-  --aqua:#22d3ee;         /* turquoise accent */
-  --aqua-2:#67e8f9;       /* lighter turquoise */
-  --aqua-3:#0891b2;       /* darker turquoise */
+  --aqua:#22d3ee;         
+  --aqua-2:#67e8f9;     
+  --aqua-3:#0891b2;     
 
-  /* FX */
   --glow: rgba(124,58,237,.18);
   --ring: #c4b5fd;
 }
@@ -36,16 +34,12 @@ html,body{height:100%}
 body.theme-dark{
   color:var(--text);
   background:
-    /* subtle aqua pop top-right */
     radial-gradient(26rem 18rem at 85% 12%, rgba(34,211,238,.18) 0%, transparent 60%),
-    /* top-left purple wash */
     radial-gradient(70rem 32rem at 15% -8%, #2b175a66 0%, transparent 60%),
-    /* bottom-center glow kept LOW + SHORT */
     radial-gradient(60rem 18rem at 50% 128%, #5b21b64d 0%, transparent 50%),
-    /* base gradient */
     linear-gradient(180deg, #140a2f 0%, #0b0620 100%);
   font-weight:500;
-  padding-top:64px; /* push below navbar */
+  padding-top:64px; 
 }
 
 /* ---------- Navbar ---------- */
@@ -131,7 +125,6 @@ body.theme-dark{
 /* ---------- Main / Result ---------- */
 .main-wrap{ padding-bottom:40px; }
 
-/* shared card look: stronger separation */
 .result-card,
 .info-card,
 .section-block{
@@ -156,7 +149,6 @@ body.theme-dark{
     0 0 0 1px rgba(167,139,250,.12);
 }
 
-/* thin aqua accent on top edge */
 .result-card::before,
 .info-card::before,
 .section-block::before{
@@ -175,13 +167,11 @@ body.theme-dark{
   background:linear-gradient(90deg, var(--p2), var(--p1));
 }
 
-/* verdict/status chips */
 .chip{ font-weight:600; }
 .chip.green{ background:#22c55e !important; }
 .chip.red{ background:#ef4444 !important; }
 .chip.amber{ background:#f59e0b !important; }
 
-/* collections on dark */
 .collection.dark-collection{ background:transparent; border:none; }
 .collection.dark-collection .collection-item{
   background:#120a2e; color:var(--text);

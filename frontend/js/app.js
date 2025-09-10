@@ -1,9 +1,8 @@
 // ----- CONFIG -----
-const API_BASE = ""; // leave blank if backend serves the frontend (same origin). Otherwise e.g. "http://localhost:3000"
+const API_BASE = "";
 const ANALYZE_URL = `${API_BASE}/api/analyze`;
 const HEALTH_URL  = `${API_BASE}/api/health`;
 
-// Optional: quick mock if backend is down
 const USE_MOCK_WHEN_OFFLINE = true;
 
 // ----- DOM -----
