@@ -12,25 +12,52 @@
 </head>
 <body class="theme-dark" id="home">
 
-  <!-- NAV -->
-  <nav class="nav-glass">
-    <div class="nav-wrapper container">
-      <a href="#home" class="brand-logo truncate"> Fake News Identifier</a>
-      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#tech">Tech</a></li>
-        <li><a href="#team">Team</a></li>
-      </ul>
-    </div>
-  </nav>
-  <ul id="mobile-nav" class="sidenav">
-    <li><a href="#how"><i class="material-icons">help_outline</i>How it works</a></li>
-    <li><a href="#features"><i class="material-icons">star_border</i>Features</a></li>
-    <li><a href="#tech"><i class="material-icons">build</i>Tech</a></li>
-    <li><a href="#team"><i class="material-icons">group</i>Team</a></li>
-  </ul>
+<nav class="nav-glass">
+  <div class="nav-wrapper container">
+    <a href="#home" class="brand-logo truncate">Fake News Identifier</a>
+    <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+
+    <ul class="right hide-on-med-and-down">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#tech">Tech</a></li>
+      <li><a href="#team">Team</a></li>
+
+      <!-- Logged OUT -->
+      <li class="auth-logged-out">
+        <a class="modal-trigger" href="#modal-register"><i class="material-icons left">person_add</i>Create account</a>
+      </li>
+      <li class="auth-logged-out">
+        <a class="modal-trigger" href="#modal-login"><i class="material-icons left">login</i>Log in</a>
+      </li>
+
+      <!-- Logged IN -->
+      <li class="auth-logged-in" style="display:none">
+        <a href="/profile.html"><i class="material-icons left">account_circle</i>Profile</a>
+      </li>
+      <li class="auth-logged-in" style="display:none">
+        <a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Mobile sidenav -->
+<ul id="mobile-nav" class="sidenav">
+  <li><a href="#how"><i class="material-icons">help_outline</i>How it works</a></li>
+  <li><a href="#features"><i class="material-icons">star_border</i>Features</a></li>
+  <li><a href="#tech"><i class="material-icons">build</i>Tech</a></li>
+  <li><a href="#team"><i class="material-icons">group</i>Team</a></li>
+
+  <!-- Logged OUT -->
+  <li class="auth-logged-out"><a class="modal-trigger" href="#modal-register"><i class="material-icons">person_add</i>Create account</a></li>
+  <li class="auth-logged-out"><a class="modal-trigger" href="#modal-login"><i class="material-icons">login</i>Log in</a></li>
+
+  <!-- Logged IN -->
+  <li class="auth-logged-in" style="display:none"><a href="/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+  <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
+</ul>
+
 
   <!-- HERO -->
   <header class="hero container">
