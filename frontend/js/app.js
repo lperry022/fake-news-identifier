@@ -130,18 +130,15 @@ async function analyze(input) {
   setLoading(false);
 }
 
-// ----- Events -----
 btnEl.addEventListener("click", () => analyze(inputEl.value));
 inputEl.addEventListener("keydown", (e) => {
   if (e.key === "Enter") analyze(inputEl.value);
 });
 
-// Materialize init
 document.addEventListener("DOMContentLoaded", () => {
   M.Modal.init(document.querySelectorAll(".modal"));
 });
 
-// Helpers
 function toast(msg) { M.toast({ html: msg }); }
 
 async function postJSON(url, body) {
@@ -155,7 +152,6 @@ async function postJSON(url, body) {
   return res.json();
 }
 
-// Login
 const loginBtn = document.getElementById("btn-login");
 if (loginBtn) {
   loginBtn.addEventListener("click", async () => {
@@ -169,7 +165,6 @@ if (loginBtn) {
   });
 }
 
-// Register
 const registerBtn = document.getElementById("btn-register");
 if (registerBtn) {
   registerBtn.addEventListener("click", async () => {
@@ -183,3 +178,34 @@ if (registerBtn) {
     } catch (e) { toast(e.message || "Registration failed"); }
   });
 }
+
+function toggleAuth(isLoggedIn) {
+  document.querySelectorAll(".auth-logged-in").forEach(el => el.style.display = isLoggedIn ? "" : "none");
+  document.querySelectorAll(".auth-logged-out").forEach(el => el.style.display = isLoggedIn ? "none" : "");
+}
+
+async function refreshAuthNav() {
+  try {
+    const res = await fetch("/auth/me", { credentials: "include" });
+    toggleAuth(res.ok);
+  } catch {
+    toggleAuth(false);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  M.Sidenav.init(document.querySelectorAll(".sidenav"));
+  M.Modal.init(document.querySelectorAll(".modal"));
+
+  refreshAuthNav();
+  const logoutLinks = ["#nav-logout", "#m-nav-logout"]
+    .map(sel => document.querySelector(sel))
+    .filter(Boolean);
+
+  logoutLinks.forEach(link => link.addEventListener("click", async (e) => {
+    e.preventDefault();
+    await fetch("/auth/logout", { method: "POST", credentials: "include" });
+    toggleAuth(false);
+    location.href = "/index.html";
+  }));
+});
