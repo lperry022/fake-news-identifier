@@ -49,6 +49,42 @@ In `frontend/js/app.js` set the API base if your backend runs on another port/ho
 
 ## Backend ⚙️
 
+**Location:** `backend/`  
+**Built with:** Express, Mongoose, `express-session` + `connect-mongo`, `bcryptjs`, `helmet`, `express-rate-limit` (ES Modules)
+
+### What it does
+- 🔐 **Auth** — register, login, logout, `GET /auth/me` (session cookie in MongoDB).
+- 👤 **Profile** — `GET /api/profile`, `PUT /api/profile` (change display name).
+- 🧪 **Analyze** — `POST /api/analyze` combines **source reputation** + **sensational keyword** checks.
+- 🩺 **Health** — `GET /api/health` reports server time & Mongo status.
+- 🌐 **Static** — serves the `frontend/` folder (single origin for API + assets).
+
+### Environment (.env)
+Create **`backend/.env`**:
+```env
+MONGO_URI=mongodb://127.0.0.1:27017/fni
+SESSION_SECRET=replace_me
+PORT=3000
+
+If MONGO_URI is missing, the code falls back to mongodb://127.0.0.1:27017/fni.
+
+
+Start Dev
+npm install
+
+# Start Mongo (choose one)
+brew services start mongodb-community
+# or:
+# docker run -d --name mongo -p 27017:27017 mongo:6
+
+# Seed reputation sources (e.g., bbc.com → Trusted, theonion.com → Untrusted)
+npm run seed:sources
+
+# Start app (serves frontend/ too)
+npm run start
+# → http://localhost:3000
+
+
 ---
 
 ## Project Structure 🗂️
@@ -64,6 +100,61 @@ In `frontend/js/app.js` set the API base if your backend runs on another port/ho
         ...
 
 ---
+Server layout (at a glance)
+backend/
+├─ server.js                 # app bootstrap: env, security, sessions, static, routes, sockets
+├─ config/
+│  └─ db.js                  # Mongo connection (fallback + logging)
+├─ routes/
+│  ├─ authRoutes.js          # /auth/register|login|logout, /auth/me
+│  ├─ profileRoutes.js       # /api/profile (GET/PUT, requires session)
+│  └─ analyzeRoutes.js       # /api/analyze (POST)
+├─ controllers/
+│  ├─ authController.js      # bcryptjs + express-session
+│  ├─ profileController.js   # read/update user (+ optional socket emits)
+│  └─ analyzeController.js   # domain extraction + scoring logic
+├─ middleware/
+│  ├─ auth.js                # requireAuth
+│  └─ validate.js            # request validation (Zod or simple fallback)
+├─ models/
+│  ├─ User.js
+│  ├─ Source.js
+│  └─ AnalysisLog.js
+└─ sockets/
+   └─ initSockets.js         # (optional) user rooms + session sharing with io
+
+
+Security & Reliability
+
+🛡️ Helmet headers (CSP disabled in dev for CDN assets).
+
+🚦 Rate limiting across routes (tune per environment).
+
+✅ Validation (Zod or minimal middleware).
+
+🍪 Sessions: httpOnly, sameSite: "lax", secure: false in dev (set true behind HTTPS in prod).
+
+🔗 connect-mongo uses the existing mongoose client (mongoose.connection.getClient()).
+
+Troubleshooting
+
+MONGO_URI missing → ensure backend/.env or rely on the fallback URI.
+
+connect-mongo: provide mongoUrl|client → store must use client: mongoose.connection.getClient().
+
+Auth not sticking → frontend must call /auth/* & /api/profile with credentials: "include".
+
+Analyzer always Unknown → run npm run seed:sources; scheme-less URLs are supported.
+
+Production notes
+
+Serve over HTTPS; set session cookie secure: true.
+
+Enable a strict CSP in Helmet; host assets locally or whitelist CDNs.
+
+Add password policy, email verification, password reset.
+
+Add tests (unit + integration) and CI; store secrets in a proper secret manager.
 
 ## Testing 🧪 (high level)
 
