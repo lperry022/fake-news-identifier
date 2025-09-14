@@ -2,239 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <base href="/frontend/"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Log in • Fake News Identifier</title>
 
-   <!-- Materialize CSS + Icons -->
+  <!-- CSS order: Materialize first, then icons, then your site styles -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-  <!-- Your styles -->
   <link rel="stylesheet" href="css/styles.css"/>
-</head>
-<body class="theme-dark" id="home">
 
-  <style>
-    /* glassy card like home */
-    .glass-card{
-      background: rgba(255,255,255,.05);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,.08);
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,.3);
-    }
-    /* inputs readable on dark */
-    .input-field input[type="email"],
-    .input-field input[type="password"]{ color:#fff; }
-    .input-field input::placeholder{ color:#aab0b7; opacity:1; }
-    .input-field input:focus{
-      border-bottom:1px solid #fff !important;
-      box-shadow:0 1px 0 0 #fff !important;
-    }
-    .input-field input:focus + label{ color:#fff !important; }
-    label{ color:#bbb !important; }
-    /* buttons */
-    .btn-cta{ border-radius: 999px; }
-    #togglePwd{ color:#cfd3ff; }
-  </style>
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
 </head>
 <body class="theme-dark">
 
-  <!-- NAV -->
+  <!-- NAV (same as home) -->
   <nav class="nav-glass">
     <div class="nav-wrapper container">
-      <a href="#home" class="brand-logo truncate">Fake News Identifier</a>
+      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-
       <ul class="right hide-on-med-and-down">
-        <li><a href="#how">How it works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#tech">Tech</a></li>
-        <li><a href="#team">Team</a></li>
-
-        <!-- Logged OUT -->
-        <li class="auth-logged-out">
-          <a class="modal-trigger" href="/register.html" data-target="modal-register">
-            <i class="material-icons left">person_add</i>Create account
-          </a>
-        </li>
-        <li class="auth-logged-out">
-          <a class="modal-trigger" href="/login.html" data-target="modal-login">
-            <i class="material-icons left">login</i>Log in
-          </a>
-        </li>
-
-        <!-- Logged IN -->
-        <li class="auth-logged-in" style="display:none">
-          <a href="/profile.html"><i class="material-icons left">account_circle</i>Profile</a>
-        </li>
-        <li class="auth-logged-in" style="display:none">
-          <a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a>
-        </li>
+        <li><a href="/frontend/index.html#how">How it works</a></li>
+        <li><a href="/frontend/index.html#features">Features</a></li>
+        <li><a href="/frontend/index.html#tech">Tech</a></li>
+        <li><a href="/frontend/index.html#team">Team</a></li>
+        <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
+        <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
+        <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
+        <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
       </ul>
     </div>
   </nav>
 
-  <!-- Mobile sidenav -->
   <ul id="mobile-nav" class="sidenav">
-    <li><a href="#how"><i class="material-icons">help_outline</i>How it works</a></li>
-    <li><a href="#features"><i class="material-icons">star_border</i>Features</a></li>
-    <li><a href="#tech"><i class="material-icons">build</i>Tech</a></li>
-    <li><a href="#team"><i class="material-icons">group</i>Team</a></li>
-
-    <!-- Logged OUT -->
-    <li class="auth-logged-out">
-      <a class="modal-trigger" href="/regisiter.html" data-target="modal-register">
-        <i class="material-icons">person_add</i>Create account
-      </a>
-    </li>
-    <li class="auth-logged-out">
-      <a class="modal-trigger" href="/regisiter.html" data-target="modal-login">
-        <i class="material-icons">login</i>Log in
-      </a>
-    </li>
-
-    <!-- Logged IN -->
-    <li class="auth-logged-in" style="display:none">
-      <a href="/profile.html"><i class="material-icons">account_circle</i>Profile</a>
-    </li>
-    <li class="auth-logged-in" style="display:none">
-      <a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a>
-    </li>
+    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+    <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
+    <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+    <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+    <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
   </ul>
 
-<main class="container section" style="max-width:880px">
-  <h3 class="hero-title" style="text-align:left;margin-top:12px">Log in</h3>
+  <main class="container auth-wrap">
+    <h1 class="auth-hero">Log in</h1>
 
-  <div class="card glass-card">
-    <div class="card-content white-text">
-      <form id="loginForm" autocomplete="on" novalidate>
-        <div class="input-field">
-          <input id="login-email" name="email" type="email" required autocomplete="email" placeholder="you@example.com">
-          <label for="login-email">Email</label>
-        </div>
+    <div class="card auth-card">
+      <div class="card-content white-text">
+        <form id="loginForm" novalidate>
+          <div class="input-field">
+            <input id="login-email" type="email" autocomplete="email" required placeholder="you@example.com">
+            <label for="login-email">Email</label>
+          </div>
 
-        <div class="input-field" style="position:relative">
-          <input id="login-password" name="password" type="password" required autocomplete="current-password" minlength="8" placeholder="********">
-          <label for="login-password">Password</label>
-          <button type="button" id="togglePwd" class="btn-flat" style="position:absolute;right:.25rem;top:.25rem">
-            <i class="material-icons">visibility</i>
-          </button>
-        </div>
+          <div class="input-field" style="position:relative">
+            <input id="login-password" type="password" autocomplete="current-password" minlength="8" required placeholder="********">
+            <label for="login-password">Password</label>
 
-        <p>
-          <label>
-            <input type="checkbox" id="rememberMe"/>
-            <span>Remember me on this device</span>
-          </label>
-        </p>
+            <!-- eye toggle -->
+            <button type="button" id="togglePwd" class="btn-flat toggle-eye"
+                    style="position:absolute;right:.25rem;top:.25rem">
+              <i class="material-icons">visibility</i>
+            </button>
+          </div>
 
-        <div class="section" style="margin-top:8px">
-          <button id="btn-login" class="btn btn-cta waves-effect waves-light" type="submit">
-            <i class="material-icons left">login</i>Log in
-          </button>
-          <a href="/frontend/register.html" class="btn-flat how-link">Need an account? Create one</a>
-        </div>
-      </form>
+          <p class="auth-remember">
+            <label>
+              <input type="checkbox" id="rememberMe"/>
+              <span>Remember me on this device</span>
+            </label>
+          </p>
+
+          <div class="section" style="margin-top:8px">
+            <button id="btn-login" class="btn btn-cta waves-effect waves-light">
+              <i class="material-icons left">login</i>Log in
+            </button>
+            <a href="/frontend/register.html" class="btn-flat auth-hint">Need an account? Create one</a>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
 
-<footer class="page-footer footer-compact">
-  <div class="container">© 2025 Group 11 · Fake News Identifier</div>
-</footer>
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-  // small helpers
-  const toast = (msg) => window.M && M.toast({ html: msg });
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-  function toggle(el, show = true){ if(el) el.style.display = show ? "" : "none"; }
-  function toggleAuthUI(isLoggedIn){
-    $$(".auth-logged-in").forEach(el => toggle(el, isLoggedIn));
-    $$(".auth-logged-out").forEach(el => toggle(el, !isLoggedIn));
-  }
-
-  async function fetchMe(){
-    try{
-      const r = await fetch("/auth/me", { credentials: "include" });
-      if(!r.ok) return null;
-      const j = await r.json();
-      return j?.user || null;
-    }catch{ return null; }
-  }
-
-  document.addEventListener('DOMContentLoaded', async () => {
-    M.Sidenav.init(document.querySelectorAll('.sidenav'));
-    M.updateTextFields();
-
-    // password visibility
-    const pwd = $('#login-password');
-    $('#togglePwd').addEventListener('click', () => {
-      const show = pwd.type === 'password';
-      pwd.type = show ? 'text' : 'password';
-      $('#togglePwd i').textContent = show ? 'visibility_off' : 'visibility';
-      pwd.focus();
+  <!-- Tiny page-only script for the eye toggle -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const pwd = document.getElementById('login-password');
+      const btn = document.getElementById('togglePwd');
+      btn?.addEventListener('click', () => {
+        const show = pwd.type === 'password';
+        pwd.type = show ? 'text' : 'password';
+        btn.querySelector('i').textContent = show ? 'visibility_off' : 'visibility';
+        pwd.focus();
+      });
     });
-
-    // show/hide nav items based on session
-    const me = await fetchMe();
-    toggleAuthUI(!!me);
-
-    // logout links (if visible)
-    $('#nav-logout')?.addEventListener('click', async () => {
-      try{ await fetch('/auth/logout', { method:'POST', credentials:'include' }); }catch{}
-      location.href = '/frontend/index.html';
-    });
-    $('#m-nav-logout')?.addEventListener('click', async () => {
-      try{ await fetch('/auth/logout', { method:'POST', credentials:'include' }); }catch{}
-      location.href = '/frontend/index.html';
-    });
-
-    // submit → call backend
-    const form = $('#loginForm');
-    const btn  = $('#btn-login');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = $('#login-email').value.trim();
-      const password = $('#login-password').value;
-      const remember = $('#rememberMe').checked;
-
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ toast('Enter a valid email'); return; }
-      if(password.length < 8){ toast('Password must be at least 8 characters'); return; }
-
-      // UI: busy state
-      const original = btn.innerHTML;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="preloader-wrapper small active"><div class="spinner-layer spinner-white-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></span> Logging in…';
-
-      try{
-        const res = await fetch('/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ email, password, remember })
-        });
-        const data = await res.json().catch(() => ({}));
-        if(!res.ok || data?.ok === false) throw new Error(data?.error || 'Invalid credentials');
-
-        toast('Welcome back!');
-        // go to profile (or home)
-        location.href = '/frontend/profile.html';
-      }catch(err){
-        toast(err.message || 'Login failed');
-      }finally{
-        btn.disabled = false;
-        btn.innerHTML = original;
-      }
-    });
-  });
-  setTimeout(() => {
-  window.location.href = '/frontend/index.html';
-  window.location.reload(true);  // force reload with styles
-}, 500);
-
-</script>
+  </script>
 </body>
 </html>

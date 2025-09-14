@@ -224,3 +224,80 @@ body.theme-dark{
   .btn-cta{ padding:0 22px; height:54px; }
   .search-row input{ height:54px; }
 }
+
+/* ===========================
+   AUTH PAGES (login/register)
+   =========================== */
+
+.auth-wrap {               /* centers the form and sets a nice max width */
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.auth-hero {               /* big gradient heading like the home page */
+  margin: 2.5rem 0 1.5rem;
+  font-size: clamp(36px, 6vw, 68px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: .5px;
+  background: linear-gradient(90deg, #c084fc, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* glass card like the home “search” card */
+.auth-card {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 16px;
+  box-shadow:
+    0 16px 48px rgba(0,0,0,.55),
+    inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+/* inputs look good on dark */
+.auth-card .input-field input[type="text"],
+.auth-card .input-field input[type="email"],
+.auth-card .input-field input[type="password"] {
+  color: #fff;
+}
+
+.auth-card .input-field input::placeholder {
+  color: #9aa0a6; /* readable placeholder on dark */
+  opacity: 1;
+}
+
+.auth-card .input-field input:focus {
+  border-bottom: 1px solid #c084fc !important;
+  box-shadow: 0 1px 0 0 #c084fc !important;
+}
+
+.auth-card .input-field label {
+  color: #bfc2d6 !important;
+}
+.auth-card .input-field input:focus + label {
+  color: #fff !important;
+}
+
+/* checkbox text (remember me) */
+.auth-remember span {
+  color: #d8d9e6;
+}
+
+/* CTA button to match home page */
+.btn-cta {
+  border-radius: 999px;
+  background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+  box-shadow:
+    0 10px 30px rgba(124,58,237,.45),
+    0 0 0 1px rgba(255,255,255,.06) inset;
+}
+.btn-cta .material-icons { margin-right: 6px; }
+
+/* subtle link color under the button */
+.auth-hint {
+  color: #cdbbff;
+}
+
+/* tiny eye icon color on password reveal */
+.toggle-eye { color: #cfd3ff; }
