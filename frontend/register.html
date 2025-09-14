@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Create account • Fake News Identifier</title>
+
+  <!-- CSS (order matters) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css"/>
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body class="theme-dark">
+
+  <!-- NAV (same as home) -->
+  <nav class="nav-glass">
+    <div class="nav-wrapper container">
+      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/frontend/index.html#how">How it works</a></li>
+        <li><a href="/frontend/index.html#features">Features</a></li>
+        <li><a href="/frontend/index.html#tech">Tech</a></li>
+        <li><a href="/frontend/index.html#team">Team</a></li>
+        <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
+        <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
+        <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
+        <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul id="mobile-nav" class="sidenav">
+    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+    <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
+    <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+    <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+    <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
+  </ul>
+
+  <main class="container auth-wrap">
+    <h1 class="auth-hero">Create account</h1>
+
+    <div class="card auth-card">
+      <div class="card-content white-text">
+        <form id="registerForm" novalidate>
+          <div class="input-field">
+            <input id="reg-name" type="text" autocomplete="name" required placeholder="Your name">
+            <label for="reg-name">Full name</label>
+          </div>
+
+          <div class="input-field">
+            <input id="reg-email" type="email" autocomplete="email" required placeholder="you@example.com">
+            <label for="reg-email">Email</label>
+          </div>
+
+          <div class="input-field">
+            <input id="reg-password" type="password" autocomplete="new-password" minlength="8" required placeholder="********">
+            <label for="reg-password">Password (min 8 chars)</label>
+          </div>
+
+          <div class="section" style="margin-top:8px">
+            <button id="btn-register" class="btn btn-cta waves-effect waves-light">
+              <i class="material-icons left">person_add</i>Create account
+            </button>
+            <a href="/frontend/login.html" class="btn-flat auth-hint">Already have an account? Log in</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
+</body>
+</html>

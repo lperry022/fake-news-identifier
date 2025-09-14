@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>My Profile · Fake News Identifier</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel="stylesheet" href="css/styles.css?v=3">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body class="theme-dark">
+
+<nav class="nav-glass">
+  <div class="nav-wrapper container">
+    <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
+    <a href="#" class="sidenav-trigger" data-target="mobile-nav"><i class="material-icons">menu</i></a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="/frontend/index.html#how">How it works</a></li>
+      <li><a href="/frontend/index.html#features">Features</a></li>
+      <li><a href="/frontend/index.html#tech">Tech</a></li>
+      <li><a href="/frontend/index.html#team">Team</a></li>
+      <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
+      <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
+      <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
+      <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
+    </ul>
+  </div>
+</nav>
+
+<ul id="mobile-nav" class="sidenav">
+  <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+  <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+  <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+  <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+  <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
+  <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+  <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+  <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
+</ul>
+
+<main id="profilePage" class="container" style="margin-top:2rem">
+  <h3 class="hero-title" style="text-align:left">My Profile</h3>
+
+  <div class="card dark-card">
+    <div class="card-content white-text">
+      <span class="card-title">Account</span>
+      <div class="row" style="margin-bottom:.75rem">
+        <div class="col s12 m6"><p><strong>Name:</strong> <span id="nameText">—</span></p></div>
+        <div class="col s12 m6"><p><strong>Email:</strong> <span id="emailText">—</span></p></div>
+      </div>
+      <p><strong>User ID:</strong> <span id="idText">—</span></p>
+    </div>
+  </div>
+
+  <div class="card dark-card">
+    <div class="card-content white-text">
+      <span class="card-title">Change display name</span>
+      <div class="row" style="margin-top:.5rem">
+        <div class="input-field col s12 m8">
+          <input id="newName" type="text"/><label for="newName">New name</label>
+        </div>
+        <div class="input-field col s12 m4">
+          <button id="saveNameBtn" class="btn btn-cta" style="width:100%"><i class="material-icons left">save</i>Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="page-footer footer-compact">
+  <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+</footer>
+</body>
+</html>
