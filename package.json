@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node backend/server.js",
-    "start": "node backend/server.js"
+    "dev": "http-server . -p 5173 -o /index.html",
+    "start": "npm run dev"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
@@ -17,5 +17,8 @@
     "mongodb": "^6.19.0",
     "mongoose": "^8.5.1",
     "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }

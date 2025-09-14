@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Create account • Fake News Identifier</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css"/>
+</head>
+<body class="theme-dark">
+
+<!-- NAVBAR (desktop) -->
+<nav class="nav-glass">
+  <div class="nav-wrapper container">
+    <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
+    <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="/frontend/index.html#how">How it works</a></li>
+      <li><a href="/frontend/index.html#features">Features</a></li>
+      <li><a href="/frontend/index.html#tech">Tech</a></li>
+      <li><a href="/frontend/index.html#team">Team</a></li>
+      <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- SIDENAV (mobile) -->
+<ul id="mobile-nav" class="sidenav">
+  <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+  <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+  <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+  <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+  <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+</ul>
+
+<main class="container section">
+  <h3 class="hero-title" style="text-align:left;margin-top:12px">Create account</h3>
+
+  <div class="card result-card">
+    <div class="card-content white-text">
+      <form id="registerForm" autocomplete="on" novalidate>
+        <div class="input-field">
+          <input id="reg-name" name="name" type="text" required autocomplete="name" />
+          <label for="reg-name">Full name</label>
+        </div>
+
+        <div class="input-field">
+          <input id="reg-email" name="email" type="email" required autocomplete="email" />
+          <label for="reg-email">Email</label>
+        </div>
+
+        <div class="input-field">
+          <input id="reg-password" name="password" type="password" required autocomplete="new-password" minlength="8" />
+          <label for="reg-password">Password (min 8 chars)</label>
+        </div>
+
+        <div class="input-field">
+          <input id="reg-confirm" name="confirm" type="password" required autocomplete="new-password" minlength="8" />
+          <label for="reg-confirm">Confirm password</label>
+        </div>
+
+        <button class="btn btn-cta" type="submit"><i class="material-icons left">person_add</i>Create account</button>
+        <a href="/frontend/login.html" class="btn-flat how-link">Already have an account? Log in</a>
+      </form>
+      <p class="grey-text text-lighten-1" style="margin-top:8px;">Frontend-only demo — registration isn’t connected yet.</p>
+    </div>
+  </div>
+</main>
+
+<footer class="page-footer footer-compact">
+  <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    M.Sidenav.init(document.querySelectorAll('.sidenav'));
+
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const pwd = document.getElementById('reg-password').value.trim();
+      const confirm = document.getElementById('reg-confirm').value.trim();
+
+      if (pwd.length < 8) {
+        M.toast({html: 'Password must be at least 8 characters'});
+        return;
+      }
+      if (pwd !== confirm) {
+        M.toast({html: 'Passwords do not match'});
+        return;
+      }
+
+      M.toast({html: 'Registration disabled in demo build'});
+    });
+  });
+</script>
+</body>
+</html>

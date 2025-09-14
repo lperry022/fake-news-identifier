@@ -12,6 +12,7 @@
 </head>
 <body class="theme-dark" id="home">
 
+<!-- NAVBAR (desktop) -->
 <nav class="nav-glass">
   <div class="nav-wrapper container">
     <a href="/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
@@ -22,18 +23,16 @@
       <li><a href="/index.html#features">Features</a></li>
       <li><a href="/index.html#tech">Tech</a></li>
       <li><a href="/index.html#team">Team</a></li>
-
-      <!-- Logged OUT -->
-      <li class="auth-logged-out"><a href="/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
-      <li class="auth-logged-out"><a href="/login.html"><i class="material-icons left">login</i>Log in</a></li>
-
-      <!-- Logged IN -->
+      <!-- keep these if you want the links visible; they’re just static in the frontend-only build -->
+      <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
+      <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
       <li class="auth-logged-in" style="display:none"><a href="/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
       <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
     </ul>
   </div>
 </nav>
 
+<!-- SIDENAV (mobile) -->
 <ul id="mobile-nav" class="sidenav">
   <li><a href="/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
   <li><a href="/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
@@ -45,176 +44,129 @@
   <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
 </ul>
 
+<!-- HERO -->
+<header class="hero container">
+  <h1 class="hero-title">Fake News Identifier</h1>
 
-<!-- Mobile sidenav -->
-<ul id="mobile-nav" class="sidenav">
-  <li><a href="#how"><i class="material-icons">help_outline</i>How it works</a></li>
-  <li><a href="#features"><i class="material-icons">star_border</i>Features</a></li>
-  <li><a href="#tech"><i class="material-icons">build</i>Tech</a></li>
-  <li><a href="#team"><i class="material-icons">group</i>Team</a></li>
-
-  <!-- Logged OUT -->
-  <li class="auth-logged-out"><a class="modal-trigger" href="#modal-register"><i class="material-icons">person_add</i>Create account</a></li>
-  <li class="auth-logged-out"><a class="modal-trigger" href="#modal-login"><i class="material-icons">login</i>Log in</a></li>
-
-  <!-- Logged IN -->
-  <li class="auth-logged-in" style="display:none"><a href="/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
-  <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
-</ul>
-
-
-  <!-- HERO -->
-  <header class="hero container">
-    <h1 class="hero-title">Fake News Identifier</h1>
-
-    <div class="search-card z-depth-2">
-      <div class="search-row">
-        <input id="newsInput" type="text" aria-label="Headline or link" placeholder="Paste a headline or link…"/>
-        <button id="analyzeBtn" class="btn btn-cta waves-effect waves-light">Analyze</button>
-      </div>
-      <a href="#how" class="how-link">How it works</a>
+  <div class="search-card z-depth-2">
+    <div class="search-row">
+      <input id="newsInput" type="text" aria-label="Headline or link" placeholder="Paste a headline or link…"/>
+      <button id="analyzeBtn" class="btn btn-cta waves-effect waves-light" disabled>Analyze</button>
     </div>
-  </header>
+    <p class="grey-text text-lighten-1">Analysis disabled — frontend demo only.</p>
+  </div>
+</header>
 
-  <!-- MAIN -->
-  <main class="container main-wrap">
+<main class="container main-wrap">
 
-    <!-- Loader -->
-    <section id="loader" class="center-align" style="display:none">
-      <div class="preloader-wrapper active">
-        <div class="spinner-layer spinner-white-only">
-          <div class="circle-clipper left"><div class="circle"></div></div>
-          <div class="gap-patch"><div class="circle"></div></div>
-          <div class="circle-clipper right"><div class="circle"></div></div>
-        </div>
-      </div>
-      <p class="grey-text">Analyzing…</p>
-    </section>
+  <!-- Result (demo) -->
+  <!-- Result (hidden until user clicks Analyze) -->
+<section id="result" class="card result-card z-depth-2" aria-live="polite" style="display:none">
+  <div class="card-content white-text">
+    <h6 class="section-label">Verdict</h6>
+    <div id="verdictBadge" class="chip">—</div>
 
-    <!-- Result -->
-    <section id="result" class="card result-card z-depth-2" style="display:none" aria-live="polite">
-      <div class="card-content white-text">
-        <h6 class="section-label">Verdict</h6>
-        <div id="verdictBadge" class="chip"></div>
+    <h6 class="section-label">Source Reputation</h6>
+    <div id="sourceBadge" class="chip">—</div>
 
-        <h6 class="section-label">Credibility Score</h6>
-        <div class="progress thin">
-          <div id="scoreBar" class="determinate" style="width:0%"></div>
-        </div>
-        <p id="scoreText" class="grey-text text-lighten-1"></p>
+    <h6 class="section-label">Flags</h6>
+    <ul id="flagsList" class="collection dark-collection">
+      <li class="collection-item grey-text text-lighten-1">No checks run in demo mode</li>
+    </ul>
+  </div>
+</section>
 
-        <h6 class="section-label">Source Reputation</h6>
-        <div id="sourceBadge" class="chip"></div>
 
-        <h6 class="section-label">Flags</h6>
-        <ul id="flagsList" class="collection dark-collection"></ul>
-      </div>
-    </section>
-
-    <!-- How it works -->
-    <section id="how" class="info-grid">
-      <div class="info-card card z-depth-1">
-        <div class="card-content">
-          <span class="card-title"><i class="material-icons icon-round">search</i> 1) Input</span>
-          <p>Paste a <strong>headline</strong> or <strong>URL</strong> and hit <em>Analyze</em>.</p>
-        </div>
-      </div>
-      <div class="info-card card z-depth-1">
-        <div class="card-content">
-          <span class="card-title"><i class="material-icons icon-round">insights</i> 2) Checks</span>
-          <p>We check for <em>sensational keywords</em>, <em>source reputation</em> (trusted/untrusted/unknown), and (optionally) a fact-check API.</p>
-        </div>
-      </div>
-      <div class="info-card card z-depth-1">
-        <div class="card-content">
-          <span class="card-title"><i class="material-icons icon-round">verified</i> 3) Result</span>
-          <p>You’ll get a <strong>credibility score</strong>, a <strong>verdict</strong>, and any <strong>flags</strong> found.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section id="features" class="section-block card z-depth-1">
+  <!-- How it works -->
+  <section id="how" class="info-grid">
+    <div class="info-card card z-depth-1">
       <div class="card-content">
-        <span class="card-title">Features</span>
-        <ul class="feature-list">
-          <li><i class="material-icons">bolt</i> Real-time analysis in the browser</li>
-          <li><i class="material-icons">badge</i> Source reputation badges (Trusted / Untrusted / Unknown)</li>
-          <li><i class="material-icons">accessibility</i> Accessible UI (keyboard & screen-reader friendly)</li>
-          <li><i class="material-icons">speed</i> Lightweight — Materialize + Vanilla JS only</li>
-          <li><i class="material-icons">privacy_tip</i> Privacy-respecting: no personal data required</li>
-        </ul>
+        <span class="card-title"><i class="material-icons icon-round">search</i> 1) Input</span>
+        <p>Paste a <strong>headline</strong> or <strong>URL</strong> and hit <em>Analyze</em>.</p>
       </div>
-    </section>
-
-    <!-- Tech -->
-    <section id="tech" class="section-block card z-depth-1">
-      <div class="card-content">
-        <span class="card-title">Technology Stack (mandated)</span>
-        <div class="chip">Node.js (backend)</div>
-        <div class="chip">Vanilla JavaScript</div>
-        <div class="chip">HTML & CSS</div>
-        <div class="chip">Materialize CSS</div>
-        <div class="chip">MongoDB</div>
-        <p class="grey-text text-lighten-1">Frontend calls <code>/api/analyze</code> and <code>/api/health</code> on the backend.</p>
-      </div>
-    </section>
-
-    <!-- Team -->
-    <section id="team" class="section-block card z-depth-1">
-      <div class="card-content">
-        <span class="card-title">Team — Group 11</span>
-        <ul class="collection dark-collection">
-          <li class="collection-item">Liana Perry — Frontend [Sprint 1 Scrum Master]</li>
-          <li class="collection-item">Hashaam Khan — Backend [Sprint 2 Scrum Master]</li>
-          <li class="collection-item">Meetkumar Kiranbhai Parmar — Backend</li>
-          <li class="collection-item">Rubalpreet Singh — Backend</li>
-        </ul>
-      </div>
-    </section>
-
-    <div class="center-align section">
-      <a href="#home" class="btn-flat how-link"><i class="material-icons left">arrow_upward</i>Back to top</a>
     </div>
-  </main>
+    <div class="info-card card z-depth-1">
+      <div class="card-content">
+        <span class="card-title"><i class="material-icons icon-round">insights</i> 2) Checks</span>
+        <p>We plan to check for <em>sensational keywords</em> and <em>source reputation</em>. (Disabled in this demo.)</p>
+      </div>
+    </div>
+    <div class="info-card card z-depth-1">
+      <div class="card-content">
+        <span class="card-title"><i class="material-icons icon-round">verified</i> 3) Result</span>
+        <p>You’ll see a <strong>verdict</strong> and any <strong>flags</strong> found.</p>
+      </div>
+    </div>
+  </section>
 
-  <!-- FOOTER -->
-  <footer class="page-footer footer-compact">
-    <div class="container">© 2025 Group 11 · Fake News Identifier · Built with Materialize & Vanilla JS</div>
-  </footer>
+  <!-- Features -->
+  <section id="features" class="section-block card z-depth-1">
+    <div class="card-content">
+      <span class="card-title">Features</span>
+      <ul class="feature-list">
+        <li><i class="material-icons">bolt</i> Real-time UI (backend coming later)</li>
+        <li><i class="material-icons">accessibility</i> Accessible & responsive design</li>
+        <li><i class="material-icons">palette</i> Materialize styling</li>
+      </ul>
+    </div>
+  </section>
 
-  <!-- Auth Modals -->
-<div id="modal-login" class="modal">
-  <div class="modal-content">
-    <h5>Log in</h5>
-    <div class="input-field"><input id="login-email" type="email" required><label for="login-email">Email</label></div>
-    <div class="input-field"><input id="login-password" type="password" required><label for="login-password">Password</label></div>
-  </div>
-  <div class="modal-footer">
-    <a href="#!" id="btn-login" class="modal-close btn deep-purple">Log in</a>
-  </div>
-</div>
+  <!-- Tech -->
+  <section id="tech" class="section-block card z-depth-1">
+    <div class="card-content">
+      <span class="card-title">Technology Stack</span>
+      <div class="chip">HTML & CSS</div>
+      <div class="chip">Vanilla JavaScript</div>
+      <div class="chip">Materialize CSS</div>
+      <p class="grey-text text-lighten-1">Frontend-only demo build.</p>
+    </div>
+  </section>
 
-<div id="modal-register" class="modal">
-  <div class="modal-content">
-    <h5>Create account</h5>
-    <div class="input-field"><input id="reg-name" type="text" required><label for="reg-name">Name</label></div>
-    <div class="input-field"><input id="reg-email" type="email" required><label for="reg-email">Email</label></div>
-    <div class="input-field"><input id="reg-password" type="password" required><label for="reg-password">Password</label></div>
+  <!-- Team -->
+  <section id="team" class="section-block card z-depth-1">
+    <div class="card-content">
+      <span class="card-title">Team — Group 11</span>
+      <ul class="collection dark-collection">
+        <li class="collection-item">Liana Perry — Frontend</li>
+        <li class="collection-item">Hashaam Khan — Backend</li>
+        <li class="collection-item">Meetkumar Kiranbhai Parmar — Backend</li>
+        <li class="collection-item">Rubalpreet Singh — Backend</li>
+      </ul>
+    </div>
+  </section>
+
+  <div class="center-align section">
+    <a href="#home" class="btn-flat how-link"><i class="material-icons left">arrow_upward</i>Back to top</a>
   </div>
-  <div class="modal-footer">
-    <a href="#!" id="btn-register" class="modal-close btn deep-purple">Register</a>
-  </div>
-</div>
-  <!-- Materialize JS + init -->
-   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      M.Sidenav.init(document.querySelectorAll('.sidenav'));
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer footer-compact">
+  <div class="container">© 2025 Group 11 · Fake News Identifier · Frontend-only demo</div>
+</footer>
+
+<!-- Materialize JS + init -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sidenavs = document.querySelectorAll('.sidenav');
+    M.Sidenav.init(sidenavs);
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    M.Sidenav.init(document.querySelectorAll('.sidenav'));
+
+    // Show result card on Analyze button click
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const resultCard = document.getElementById('result');
+    analyzeBtn.addEventListener('click', () => {
+      resultCard.style.display = 'block';
+      // Optional: scroll to it smoothly
+      resultCard.scrollIntoView({ behavior: 'smooth' });
     });
-  </script>
-  <script src="js/app.js"></script>
+  });
+</script>
+
 </body>
 </html>
