@@ -4,98 +4,140 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Create account • Fake News Identifier</title>
+
+  <!-- Materialize + Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css"/>
+
+  <style>
+    /* make typed text and focus states readable on dark background */
+    label { color: #ccc !important; }
+    input[type="text"], input[type="email"], input[type="password"] { color: #fff; }
+    input::placeholder { color: #9aa0a6; opacity: 1; }
+    input:focus {
+      border-bottom: 1px solid #fff !important;
+      box-shadow: 0 1px 0 0 #fff !important;
+    }
+    input:focus + label { color: #fff !important; }
+  </style>
 </head>
 <body class="theme-dark">
 
-<!-- NAVBAR (desktop) -->
-<nav class="nav-glass">
-  <div class="nav-wrapper container">
-    <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
-    <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-    <ul class="right hide-on-med-and-down">
-      <li><a href="/frontend/index.html#how">How it works</a></li>
-      <li><a href="/frontend/index.html#features">Features</a></li>
-      <li><a href="/frontend/index.html#tech">Tech</a></li>
-      <li><a href="/frontend/index.html#team">Team</a></li>
-      <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
-    </ul>
-  </div>
-</nav>
+    <!-- NAV -->
+  <nav class="nav-glass">
+    <div class="nav-wrapper container">
+      <a href="#home" class="brand-logo truncate">Fake News Identifier</a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
-<!-- SIDENAV (mobile) -->
-<ul id="mobile-nav" class="sidenav">
-  <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
-  <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
-  <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
-  <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
-  <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
-</ul>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#tech">Tech</a></li>
+        <li><a href="#team">Team</a></li>
 
-<main class="container section">
-  <h3 class="hero-title" style="text-align:left;margin-top:12px">Create account</h3>
+        <!-- Logged OUT -->
+        <li class="auth-logged-out">
+          <a class="modal-trigger" href="/register.html" data-target="modal-register">
+            <i class="material-icons left">person_add</i>Create account
+          </a>
+        </li>
+        <li class="auth-logged-out">
+          <a class="modal-trigger" href="/login.html" data-target="modal-login">
+            <i class="material-icons left">login</i>Log in
+          </a>
+        </li>
 
-  <div class="card result-card">
-    <div class="card-content white-text">
-      <form id="registerForm" autocomplete="on" novalidate>
-        <div class="input-field">
-          <input id="reg-name" name="name" type="text" required autocomplete="name" />
-          <label for="reg-name">Full name</label>
-        </div>
-
-        <div class="input-field">
-          <input id="reg-email" name="email" type="email" required autocomplete="email" />
-          <label for="reg-email">Email</label>
-        </div>
-
-        <div class="input-field">
-          <input id="reg-password" name="password" type="password" required autocomplete="new-password" minlength="8" />
-          <label for="reg-password">Password (min 8 chars)</label>
-        </div>
-
-        <div class="input-field">
-          <input id="reg-confirm" name="confirm" type="password" required autocomplete="new-password" minlength="8" />
-          <label for="reg-confirm">Confirm password</label>
-        </div>
-
-        <button class="btn btn-cta" type="submit"><i class="material-icons left">person_add</i>Create account</button>
-        <a href="/frontend/login.html" class="btn-flat how-link">Already have an account? Log in</a>
-      </form>
-      <p class="grey-text text-lighten-1" style="margin-top:8px;">Frontend-only demo — registration isn’t connected yet.</p>
+        <!-- Logged IN -->
+        <li class="auth-logged-in" style="display:none">
+          <a href="/profile.html"><i class="material-icons left">account_circle</i>Profile</a>
+        </li>
+        <li class="auth-logged-in" style="display:none">
+          <a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a>
+        </li>
+      </ul>
     </div>
-  </div>
-</main>
+  </nav>
 
-<footer class="page-footer footer-compact">
-  <div class="container">© 2025 Group 11 · Fake News Identifier</div>
-</footer>
+  <!-- Mobile sidenav -->
+  <ul id="mobile-nav" class="sidenav">
+    <li><a href="#how"><i class="material-icons">help_outline</i>How it works</a></li>
+    <li><a href="#features"><i class="material-icons">star_border</i>Features</a></li>
+    <li><a href="#tech"><i class="material-icons">build</i>Tech</a></li>
+    <li><a href="#team"><i class="material-icons">group</i>Team</a></li>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    M.Sidenav.init(document.querySelectorAll('.sidenav'));
+    <!-- Logged OUT -->
+    <li class="auth-logged-out">
+      <a class="modal-trigger" href="/regisiter.html" data-target="modal-register">
+        <i class="material-icons">person_add</i>Create account
+      </a>
+    </li>
+    <li class="auth-logged-out">
+      <a class="modal-trigger" href="/regisiter.html" data-target="modal-login">
+        <i class="material-icons">login</i>Log in
+      </a>
+    </li>
 
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
+    <!-- Logged IN -->
+    <li class="auth-logged-in" style="display:none">
+      <a href="/profile.html"><i class="material-icons">account_circle</i>Profile</a>
+    </li>
+    <li class="auth-logged-in" style="display:none">
+      <a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a>
+    </li>
+  </ul>
 
-      const pwd = document.getElementById('reg-password').value.trim();
-      const confirm = document.getElementById('reg-confirm').value.trim();
+  <main class="container" style="max-width:640px;margin-top:2rem;">
+    <h3 class="hero-title" style="text-align:left">Create account</h3>
 
-      if (pwd.length < 8) {
-        M.toast({html: 'Password must be at least 8 characters'});
-        return;
-      }
-      if (pwd !== confirm) {
-        M.toast({html: 'Passwords do not match'});
-        return;
-      }
+    <div class="card result-card z-depth-2">
+      <div class="card-content white-text">
+        <form id="registerForm" novalidate>
+          <div class="input-field">
+            <input id="reg-name" type="text" required autocomplete="name" placeholder="Your name"/>
+            <label for="reg-name">Full name</label>
+          </div>
 
-      M.toast({html: 'Registration disabled in demo build'});
+          <div class="input-field">
+            <input id="reg-email" type="email" required autocomplete="email" placeholder="you@example.com"/>
+            <label for="reg-email">Email</label>
+          </div>
+
+          <div class="input-field">
+            <input id="reg-password" type="password" required minlength="8" autocomplete="new-password" placeholder="********"/>
+            <label for="reg-password">Password (min 8 chars)</label>
+          </div>
+
+          <button id="btn-register" type="submit" class="btn btn-cta waves-effect waves-light">
+            <i class="material-icons left">person_add</i>Create account
+          </button>
+          <a href="/login.html" class="btn-flat how-link">Already have an account? Log in</a>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Wire the page to your existing doRegister()
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("registerForm");
+      const btn  = document.getElementById("btn-register");
+
+      // submit -> call doRegister (same as modal)
+      form.addEventListener("submit", (e) => { e.preventDefault(); doRegister(); });
+
+      // optional UX: enter key in any input submits
+      ["reg-name","reg-email","reg-password"].forEach(id => {
+        const el = document.getElementById(id);
+        el && el.addEventListener("keydown", e => { if (e.key === "Enter") { e.preventDefault(); doRegister(); } });
+      });
     });
-  });
-</script>
+  </script>
 </body>
 </html>
