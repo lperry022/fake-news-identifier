@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "http-server . -p 5173 -o /index.html",
+    "dev": "http-server . -p 5173 -o /frontend/index.html",
     "start": "npm run dev"
   },
   "dependencies": {
