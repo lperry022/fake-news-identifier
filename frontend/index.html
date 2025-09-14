@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Fake News Identifier</title>
+
+  <!-- CSS: Materialize then our styles (order matters) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<link rel="stylesheet" href="css/styles.css?v=3">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body class="theme-dark" id="home">
+
+  <!-- NAV -->
+  <nav class="nav-glass">
+    <div class="nav-wrapper container">
+      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
+      <a href="#" class="sidenav-trigger" data-target="mobile-nav"><i class="material-icons">menu</i></a>
+
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/frontend/index.html#how">How it works</a></li>
+        <li><a href="/frontend/index.html#features">Features</a></li>
+        <li><a href="/frontend/index.html#tech">Tech</a></li>
+        <li><a href="/frontend/index.html#team">Team</a></li>
+
+        <!-- OUT -->
+        <li class="auth-logged-out">
+          <a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a>
+        </li>
+        <li class="auth-logged-out">
+          <a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a>
+        </li>
+        <!-- IN -->
+        <li class="auth-logged-in" style="display:none">
+          <a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a>
+        </li>
+        <li class="auth-logged-in" style="display:none">
+          <a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Mobile sidenav -->
+  <ul id="mobile-nav" class="sidenav">
+    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+    <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
+    <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+    <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+    <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
+  </ul>
+
+  <!-- HERO -->
+  <header class="hero container">
+    <h1 class="hero-title">Fake News Identifier</h1>
+
+    <div class="search-card z-depth-2">
+      <div class="search-row">
+        <input id="newsInput" type="text" placeholder="Paste a headline or link…" aria-label="Headline or link"/>
+        <button id="analyzeBtn" class="btn btn-cta waves-effect waves-light">Analyze</button>
+      </div>
+      <a class="how-link" href="#how">How it works</a>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="container main-wrap">
+    <section id="loader" class="center-align" style="display:none">
+      <div class="preloader-wrapper active">
+        <div class="spinner-layer spinner-white-only">
+          <div class="circle-clipper left"><div class="circle"></div></div>
+          <div class="gap-patch"><div class="circle"></div></div>
+          <div class="circle-clipper right"><div class="circle"></div></div>
+        </div>
+      </div>
+      <p class="grey-text">Analyzing…</p>
+    </section>
+
+    <section id="result" class="card result-card" style="display:none" aria-live="polite">
+      <div class="card-content white-text">
+        <h6 class="section-label">Verdict</h6>
+        <div id="verdictBadge" class="chip"></div>
+
+        <h6 class="section-label">Credibility Score</h6>
+        <div class="progress thin"><div id="scoreBar" class="determinate" style="width:0%"></div></div>
+        <p id="scoreText" class="grey-text text-lighten-1"></p>
+
+        <h6 class="section-label">Source Reputation</h6>
+        <div id="sourceBadge" class="chip"></div>
+
+        <h6 class="section-label">Flags</h6>
+        <ul id="flagsList" class="collection dark-collection"></ul>
+      </div>
+    </section>
+
+    <!-- How / Features / Tech / Team -->
+    <section id="how" class="info-grid">
+      <div class="info-card card"><div class="card-content">
+        <span class="card-title"><i class="material-icons icon-round">search</i> 1) Input</span>
+        <p>Paste a <strong>headline</strong> or <strong>URL</strong> and hit <em>Analyze</em>.</p>
+      </div></div>
+      <div class="info-card card"><div class="card-content">
+        <span class="card-title"><i class="material-icons icon-round">insights</i> 2) Checks</span>
+        <p>We check for <em>sensational keywords</em>, <em>source reputation</em> (trusted/untrusted/unknown), and (optionally) a fact-check API.</p>
+      </div></div>
+      <div class="info-card card"><div class="card-content">
+        <span class="card-title"><i class="material-icons icon-round">verified</i> 3) Result</span>
+        <p>You’ll get a <strong>credibility score</strong>, a <strong>verdict</strong>, and any <strong>flags</strong> found.</p>
+      </div></div>
+    </section>
+
+    <section id="features" class="section-block card"><div class="card-content">
+      <span class="card-title">Features</span>
+      <ul class="feature-list">
+        <li><i class="material-icons">bolt</i> Real-time analysis in the browser</li>
+        <li><i class="material-icons">badge</i> Source reputation badges (Trusted / Untrusted / Unknown)</li>
+        <li><i class="material-icons">accessibility</i> Accessible UI (keyboard & screen-reader friendly)</li>
+        <li><i class="material-icons">speed</i> Lightweight — Materialize + Vanilla JS only</li>
+        <li><i class="material-icons">privacy_tip</i> Privacy-respecting: no personal data required</li>
+      </ul>
+    </div></section>
+
+    <section id="tech" class="section-block card"><div class="card-content">
+      <span class="card-title">Technology Stack (mandated)</span>
+      <div class="chip">Node.js (backend)</div>
+      <div class="chip">Vanilla JavaScript</div>
+      <div class="chip">HTML & CSS</div>
+      <div class="chip">Materialize CSS</div>
+      <div class="chip">MongoDB</div>
+      <p class="grey-text text-lighten-1">Frontend calls <code>/api/analyze</code> and <code>/api/health</code> on the backend.</p>
+    </div></section>
+
+    <section id="team" class="section-block card"><div class="card-content">
+      <span class="card-title">Team — Group 11</span>
+      <ul class="collection dark-collection">
+        <li class="collection-item">Liana Perry — Frontend [Sprint 1 Scrum Master]</li>
+        <li class="collection-item">Hashaam Khan — Backend [Sprint 2 Scrum Master]</li>
+        <li class="collection-item">Meetkumar Kiranbhai Parmar — Backend</li>
+        <li class="collection-item">Rubalpreet Singh — Backend</li>
+      </ul>
+    </div></section>
+
+    <div class="center-align section">
+      <a href="#home" class="btn-flat how-link"><i class="material-icons left">arrow_upward</i>Back to top</a>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier · Built with Materialize & Vanilla JS</div>
+  </footer>
+</body>
+</html>

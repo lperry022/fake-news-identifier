@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>My Profile · Fake News Identifier</title>
+
+  <!-- Materialize + Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+  <!-- Your site styles (must be after materialize) -->
+  <link rel="stylesheet" href="css/styles.css"/>
+
+  <style>
+    /* same look as home “glass” cards */
+    .glass-card,
+    .result-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    }
+    .profile-title {
+      font-size: clamp(28px, 5vw, 56px);
+      font-weight: 800;
+      margin: 24px 0 12px;
+      letter-spacing: 0.3px;
+      background: linear-gradient(90deg,#c084fc,#7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .section-label { color:#cfd3ff; font-weight: 600; letter-spacing:.3px; }
+    .input-field input { color:#fff; }
+    .input-field input::placeholder { color:#aab0b7; opacity:1; }
+    .input-field input:focus{
+      border-bottom:1px solid #cfd3ff !important;
+      box-shadow:0 1px 0 0 #cfd3ff !important;
+    }
+    .btn-save {
+      border-radius: 999px;
+      font-weight: 700;
+      background: linear-gradient(90deg,#7c3aed,#9333ea);
+    }
+  </style>
+</head>
+<body class="theme-dark">
+
+  <!-- NAV -->
+  <nav class="nav-glass">
+    <div class="nav-wrapper container">
+      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
+      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/frontend/index.html#how">How it works</a></li>
+        <li><a href="/frontend/index.html#features">Features</a></li>
+        <li><a href="/frontend/index.html#tech">Tech</a></li>
+        <li><a href="/frontend/index.html#team">Team</a></li>
+        <li class="auth-logged-in"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
+        <li class="auth-logged-in"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
+        <li class="auth-logged-out" style="display:none"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
+        <li class="auth-logged-out" style="display:none"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Mobile sidenav -->
+  <ul id="mobile-nav" class="sidenav">
+    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
+    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
+    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
+    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
+    <li class="auth-logged-in"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
+    <li class="auth-logged-in"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
+    <li class="auth-logged-out" style="display:none"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
+    <li class="auth-logged-out" style="display:none"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+  </ul>
+
+  <main id="profilePage" class="container" style="margin-top: 1.25rem">
+    <h1 class="profile-title">My Profile</h1>
+
+    <!-- Account info -->
+    <div class="card result-card">
+      <div class="card-content white-text">
+        <h6 class="section-label">Account</h6>
+        <div class="row" style="margin-bottom:.75rem">
+          <div class="col s12 m6"><p><strong>Name:</strong> <span id="nameText">—</span></p></div>
+          <div class="col s12 m6"><p><strong>Email:</strong> <span id="emailText">—</span></p></div>
+        </div>
+        <p><strong>User ID:</strong> <span id="idText">—</span></p>
+      </div>
+    </div>
+
+    <!-- Change name -->
+    <div class="card result-card">
+      <div class="card-content white-text">
+        <h6 class="section-label">Change display name</h6>
+        <div class="row" style="margin-top:.5rem">
+          <div class="input-field col s12 m8">
+            <input id="newName" type="text" placeholder="Your new display name"/>
+            <label for="newName">New name</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <button id="saveNameBtn" class="btn btn-save waves-effect waves-light" style="width:100%">
+              <i class="material-icons left">save</i>Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Not logged in -->
+    <div id="notAuth" class="card red darken-2" style="display:none">
+      <div class="card-content white-text">
+        <span class="card-title"><i class="material-icons left">error_outline</i>Not logged in</span>
+        <p>Go back to the <a href="/frontend/index.html" class="yellow-text text-lighten-3">home page</a> and log in.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    const $ = (s)=>document.querySelector(s);
+    const toast = (m)=>window.M && M.toast({html:m});
+
+    async function fetchJSON(url, opts){ const r=await fetch(url,opts); const d=await r.json().catch(()=>({})); return {ok:r.ok, data:d}; }
+    async function putJSON(url, body){
+      const r=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json"},credentials:"include",body:JSON.stringify(body)});
+      const d=await r.json().catch(()=>({})); return {ok:r.ok, data:d};
+    }
+
+    async function loadProfile(){
+      let res = await fetchJSON("/api/profile", { credentials:"include" });
+      if(!res.ok) res = await fetchJSON("/auth/me", { credentials:"include" });
+      if(!res.ok){ $("#notAuth").style.display=""; return; }
+
+      const u = res.data.user || res.data || {};
+      $("#nameText").textContent  = u.name  || "—";
+      $("#emailText").textContent = u.email || "—";
+      $("#idText").textContent    = u.id || u._id || "—";
+      $("#newName").value = u.name || "";
+      if(window.M) M.updateTextFields();   // keep the label floated
+    }
+
+    async function saveName(){
+      const name = ($("#newName").value || "").trim();
+      if(!name) return toast("Enter a name");
+      const res = await putJSON("/api/profile", { name });
+      if(!res.ok) return toast(res.data?.error || "Failed to update name");
+      const user = res.data.user || {};
+      $("#nameText").textContent = user.name || name;
+      toast("Name updated");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if(window.M) { M.AutoInit(); }
+      loadProfile();
+      $("#saveNameBtn")?.addEventListener("click", saveName);
+
+      // nav logout hooks (so the “Logout” in nav works)
+      $("#nav-logout")?.addEventListener("click", async () => { try{ await fetch("/auth/logout",{method:"POST",credentials:"include"});}catch{} location.href="/frontend/index.html"; });
+      $("#m-nav-logout")?.addEventListener("click", async () => { try{ await fetch("/auth/logout",{method:"POST",credentials:"include"});}catch{} location.href="/frontend/index.html"; });
+    });
+  </script>
+</body>
+</html>
