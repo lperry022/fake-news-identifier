@@ -333,3 +333,7 @@ table.highlight tbody td { color:#ddd; }
 .hero-cta .cta-note { color:#c8b6ff; font-weight:600; }
 
 .thin { height: 10px; }
+
+.stat-row .stat-card { background: rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.06); border-radius:12px; }
+.stat-num { font-size:2rem; font-weight:700; }
+.stat-label { color:#bbb; }
