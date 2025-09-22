@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dashboard • Fake News Identifier</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="theme-dark">
+  <div id="navbar-container"></div>
+
+
+  <main class="container main-wrap">
+    <div class="card">
+      <div class="card-content">
+        <span class="card-title">Recent searches</span>
+
+        <div class="row" style="margin-bottom:0">
+          <div class="input-field col s12 m6">
+            <select id="filterSource">
+              <option value="">All sources</option>
+              <option value="Trusted">Trusted</option>
+              <option value="Untrusted">Untrusted</option>
+              <option value="Unknown">Unknown</option>
+            </select>
+            <label for="filterSource">Filter by source</label>
+          </div>
+          <div class="input-field col s12 m6">
+            <select id="sortBy">
+              <option value="ts_desc" selected>Newest first</option>
+              <option value="ts_asc">Oldest first</option>
+              <option value="score_desc">Highest score</option>
+              <option value="score_asc">Lowest score</option>
+            </select>
+            <label for="sortBy">Sort</label>
+          </div>
+        </div>
+
+        <table class="highlight responsive-table">
+          <thead>
+            <tr><th>Time</th><th>Input</th><th>Score</th><th>Source</th></tr>
+          </thead>
+          <tbody id="logsTable">
+            <tr><td colspan="4" class="grey-text center-align">Loading…</td></tr>
+          </tbody>
+        </table>
+
+        <p id="emptyState" class="grey-text center-align" style="display:none">No results yet.</p>
+      </div>
+    </div>
+
+    <div class="center-align section">
+      <a href="/frontend/index.html#home" class="btn"><i class="material-icons left">arrow_back</i>Back to Home</a>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier</div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/frontend/js/app.js"></script>
+  <script>
+    // protect this route
+    document.addEventListener('DOMContentLoaded', () => Auth.requireLogin());
+  </script>
+  <script src="/frontend/js/dashboard.js"></script>
+    <script src="js/navbar.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/analyze.js"></script>
+</body>
+</html>

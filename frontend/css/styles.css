@@ -314,3 +314,22 @@ body.theme-dark{
 
 /* dark list variant already used in your HTML */
 .dark-collection .collection-item { background: #1e1e1e; color: #eee; }
+
+
+.container.main-wrap { margin-top: 24px; }
+
+.card, .result-card, .info-card, .section-block {
+  background: rgba(255,255,255,0.04);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+table.highlight thead th { color:#e6e6e6; }
+table.highlight tbody td { color:#ddd; }
+.dark-collection .collection-item { background: rgba(255,255,255,0.04); color:#eee; }
+
+
+.hero-cta { margin-top: 16px; display:flex; gap:12px; align-items:center; }
+.hero-cta .cta-note { color:#c8b6ff; font-weight:600; }
+
+.thin { height: 10px; }

@@ -17,23 +17,8 @@
 </head>
 <body class="theme-dark">
 
-  <!-- NAV (same as home) -->
-  <nav class="nav-glass">
-    <div class="nav-wrapper container">
-      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
-      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/frontend/index.html#how">How it works</a></li>
-        <li><a href="/frontend/index.html#features">Features</a></li>
-        <li><a href="/frontend/index.html#tech">Tech</a></li>
-        <li><a href="/frontend/index.html#team">Team</a></li>
-        <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
-        <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
-        <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
-        <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
-      </ul>
-    </div>
-  </nav>
+  <div id="navbar-container"></div>
+
 
   <ul id="mobile-nav" class="sidenav">
     <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
@@ -103,5 +88,8 @@
       });
     });
   </script>
+    <script src="js/navbar.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/analyze.js"></script>
 </body>
 </html>
