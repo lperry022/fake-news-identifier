@@ -18,58 +18,43 @@
 <body class="theme-dark">
 
   <div id="navbar-container"></div>
+ <main class="container auth-wrap">
+  <h1 class="auth-hero center-align" style="margin-top:28px;">Log in</h1>
+  <p class="grey-text text-lighten-1 center-align" style="margin-bottom:24px">
+    Access your dashboard and see your past checks.
+  </p>
 
+  <div class="card auth-card" style="max-width:500px;margin:0 auto;">
+    <div class="card-content white-text">
+      <form id="loginForm" novalidate>
+        <div class="input-field">
+          <input id="login-email" type="email" autocomplete="email" required placeholder="you@example.com">
+          <label for="login-email">Email</label>
+        </div>
 
-  <ul id="mobile-nav" class="sidenav">
-    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
-    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
-    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
-    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
-    <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
-    <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
-    <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
-    <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
-  </ul>
+        <div class="input-field">
+          <input id="login-password" type="password" autocomplete="current-password" required placeholder="********">
+          <label for="login-password">Password</label>
+        </div>
 
-  <main class="container auth-wrap">
-    <h1 class="auth-hero">Log in</h1>
+        <p>
+          <label>
+            <input type="checkbox" id="rememberMe" />
+            <span>Remember me on this device</span>
+          </label>
+        </p>
 
-    <div class="card auth-card">
-      <div class="card-content white-text">
-        <form id="loginForm" novalidate>
-          <div class="input-field">
-            <input id="login-email" type="email" autocomplete="email" required placeholder="you@example.com">
-            <label for="login-email">Email</label>
-          </div>
-
-          <div class="input-field" style="position:relative">
-            <input id="login-password" type="password" autocomplete="current-password" minlength="8" required placeholder="********">
-            <label for="login-password">Password</label>
-
-            <!-- eye toggle -->
-            <button type="button" id="togglePwd" class="btn-flat toggle-eye"
-                    style="position:absolute;right:.25rem;top:.25rem">
-              <i class="material-icons">visibility</i>
-            </button>
-          </div>
-
-          <p class="auth-remember">
-            <label>
-              <input type="checkbox" id="rememberMe"/>
-              <span>Remember me on this device</span>
-            </label>
-          </p>
-
-          <div class="section" style="margin-top:8px">
-            <button id="btn-login" class="btn btn-cta waves-effect waves-light">
-              <i class="material-icons left">login</i>Log in
-            </button>
-            <a href="/frontend/register.html" class="btn-flat auth-hint">Need an account? Create one</a>
-          </div>
-        </form>
-      </div>
+        <div class="section" style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-cta waves-effect waves-light" type="submit">
+            <i class="material-icons left">login</i>Log in
+          </button>
+          <a href="/frontend/register.html" class="btn-flat auth-hint">Need an account? Create one</a>
+        </div>
+      </form>
     </div>
-  </main>
+  </div>
+</main>
+
 
   <footer class="page-footer footer-compact">
     <div class="container">© 2025 Group 11 · Fake News Identifier</div>

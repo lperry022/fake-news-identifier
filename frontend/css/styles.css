@@ -232,6 +232,7 @@ body.theme-dark{
 .auth-wrap {               /* centers the form and sets a nice max width */
   max-width: 980px;
   margin: 0 auto;
+    padding-bottom: 4rem; 
 }
 
 .auth-hero {               /* big gradient heading like the home page */
