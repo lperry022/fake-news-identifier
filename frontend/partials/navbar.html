@@ -1,26 +1,22 @@
-<!-- navbar.html -->
 <nav class="nav-glass">
   <div class="nav-wrapper container">
     <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
     <a href="#" class="sidenav-trigger" data-target="mobile-nav"><i class="material-icons">menu</i></a>
 
     <ul class="right hide-on-med-and-down">
-      <li><a href="/frontend/index.html#how">How it works</a></li>
-      <li><a href="/frontend/index.html#features">Features</a></li>
-      <li><a href="/frontend/index.html#tech">Tech</a></li>
-      <li><a href="/frontend/index.html#team">Team</a></li>
-
-      <!-- Help / Dashboard -->
+      <li><a href="/frontend/about.html">About</a></li>
       <li><a href="/frontend/help.html">Help</a></li>
-      <li class="link-dashboard"><a href="/frontend/dashboard.html">Dashboard</a></li>
+      <li><a href="/frontend/dashboard.html">Dashboard</a></li>
 
-      <!-- Auth -->
+      <!-- OUT -->
       <li class="auth-logged-out">
         <a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a>
       </li>
       <li class="auth-logged-out">
         <a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a>
       </li>
+
+      <!-- IN -->
       <li class="auth-logged-in" style="display:none">
         <a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a>
       </li>
@@ -34,13 +30,13 @@
 <!-- Mobile sidenav -->
 <ul id="mobile-nav" class="sidenav">
   <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
-  <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
-  <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
-  <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
-  <li><a href="/frontend/help.html"><i class="material-icons">info</i>Help</a></li>
-  <li class="link-dashboard"><a href="/frontend/dashboard.html"><i class="material-icons">dashboard</i>Dashboard</a></li>
+  <li><a href="/frontend/about.html"><i class="material-icons">info</i>About</a></li>
+  <li><a href="/frontend/help.html"><i class="material-icons">help</i>Help</a></li>
+  <li><a href="/frontend/dashboard.html"><i class="material-icons">dashboard</i>Dashboard</a></li>
+
   <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
   <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
+
   <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
   <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
 </ul>
