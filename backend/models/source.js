@@ -7,4 +7,4 @@ const SourceSchema = new mongoose.Schema({
   notes: { type: String, default: "" }
 }, { timestamps: true });
 
-export const Source = mongoose.model("Source", SourceSchema);
+export const Source = mongoose.models.Source || mongoose.model("Source", SourceSchema);

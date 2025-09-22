@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "node backend/server.js",
-    "start": "node backend/server.js"
+    "start": "node backend/server.js",
+    "test": "NODE_ENV=test node --test --experimental-test-coverage"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -36,6 +37,8 @@
   },
   "homepage": "https://github.com/lperry022/fake-news-identifier#readme",
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "mongodb-memory-server": "^10.2.1",
+    "nodemon": "^3.1.10",
+    "supertest": "^7.1.4"
   }
 }
