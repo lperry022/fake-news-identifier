@@ -1,13 +1,19 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const container = document.getElementById('navbar-container');
-  if (!container) return;
-  try {
-    const res = await fetch('/frontend/partials/navbar.html');
-    container.innerHTML = await res.text();
-    // re-init Materialize sidenav after injection
-    if (window.M?.Sidenav) M.Sidenav.init(document.querySelectorAll('.sidenav'));
-    if (window.Auth) Auth.applyNavState();
-  } catch (err) {
-    console.error('Failed to load navbar:', err);
-  }
+document.addEventListener("DOMContentLoaded", () => {
+  fetch("/frontend/partials/navbar.html")
+    .then(r => r.text())
+    .then(html => {
+      document.getElementById("navbar-container").innerHTML = html;
+      initNavState();
+    });
 });
+
+function initNavState() {
+  const isLoggedIn = Boolean(localStorage.getItem("userToken")); 
+
+  document.querySelectorAll(".auth-logged-in").forEach(el => {
+    el.style.display = isLoggedIn ? "" : "none";
+  });
+  document.querySelectorAll(".auth-logged-out").forEach(el => {
+    el.style.display = isLoggedIn ? "none" : "";
+  });
+}
