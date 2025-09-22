@@ -48,7 +48,6 @@ In `frontend/js/app.js` set the API base if your backend runs on another port/ho
 ---
 
 ## Backend ⚙️
-## Backend ⚙️
 
 **Location:** `backend/`  
 **Built with:** Express, Mongoose, `express-session` + `connect-mongo`, `bcryptjs`, `helmet`, `express-rate-limit` (ES Modules)

@@ -71,12 +71,24 @@ app.use(sessionMiddleware);
 
 // ---------- Static frontend ----------
 const FRONTEND_DIR = path.join(__dirname, "..", "frontend");
-app.use(express.static(FRONTEND_DIR, {
+
+// serve /frontend/* files (matches your <base href="/frontend/">)
+app.use("/frontend", express.static(FRONTEND_DIR, {
   index: "index.html",
   extensions: ["html"],
   cacheControl: false,
   etag: false,
 }));
+
+// Optional: make / redirect to /frontend/
+app.get("/", (_req, res) => res.redirect("/frontend/"));
+
+// ---------- SPA/HTML fallback, but ONLY for paths without an extension
+// i.e. don't hijack real assets like .css, .js, .png
+app.get(/^\/frontend(?!.*\.\w+$).*/, (_req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, "index.html"));
+});
+
 
 // Small asset sanity check (visit http://localhost:3000/_asset-check)
 app.get("/_asset-check", (req, res) => {
