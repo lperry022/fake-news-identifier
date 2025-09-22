@@ -9,48 +9,33 @@
   <!-- CSS (order matters) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css"/>
-
-  <!-- JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
-  <script src="js/app.js" defer></script>
+  <link rel="stylesheet" href="css/styles.css?v=5"/>
 </head>
 <body class="theme-dark">
 
-  <!-- NAV (same as home) -->
-  <nav class="nav-glass">
-    <div class="nav-wrapper container">
-      <a href="/frontend/index.html#home" class="brand-logo truncate">Fake News Identifier</a>
-      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="/frontend/index.html#how">How it works</a></li>
-        <li><a href="/frontend/index.html#features">Features</a></li>
-        <li><a href="/frontend/index.html#tech">Tech</a></li>
-        <li><a href="/frontend/index.html#team">Team</a></li>
-        <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons left">person_add</i>Create account</a></li>
-        <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons left">login</i>Log in</a></li>
-        <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons left">account_circle</i>Profile</a></li>
-        <li class="auth-logged-in" style="display:none"><a id="nav-logout" href="#!"><i class="material-icons left">logout</i>Logout</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <ul id="mobile-nav" class="sidenav">
-    <li><a href="/frontend/index.html#how"><i class="material-icons">help_outline</i>How it works</a></li>
-    <li><a href="/frontend/index.html#features"><i class="material-icons">star_border</i>Features</a></li>
-    <li><a href="/frontend/index.html#tech"><i class="material-icons">build</i>Tech</a></li>
-    <li><a href="/frontend/index.html#team"><i class="material-icons">group</i>Team</a></li>
-    <li class="auth-logged-out"><a href="/frontend/register.html"><i class="material-icons">person_add</i>Create account</a></li>
-    <li class="auth-logged-out"><a href="/frontend/login.html"><i class="material-icons">login</i>Log in</a></li>
-    <li class="auth-logged-in" style="display:none"><a href="/frontend/profile.html"><i class="material-icons">account_circle</i>Profile</a></li>
-    <li class="auth-logged-in" style="display:none"><a id="m-nav-logout" href="#!"><i class="material-icons">logout</i>Logout</a></li>
-  </ul>
+  <!-- shared navbar -->
+  <div id="navbar-container"></div>
 
   <main class="container auth-wrap">
-    <h1 class="auth-hero">Create account</h1>
+    <!-- HIBP-style hero -->
+    <h1 class="auth-hero center-align" style="margin-top:28px;">Create Your Account</h1>
+    <p class="grey-text text-lighten-1 center-align" style="margin-bottom:24px">
+      Access personalised features and manage your Fake News Identifier dashboard.
+    </p>
 
-    <div class="card auth-card">
+    <!-- Centered panel -->
+    <div class="card auth-card" style="max-width:760px;margin:0 auto;">
       <div class="card-content white-text">
+        <h5 style="margin-top:0">Why create an account?</h5>
+        <ul class="browser-default" style="margin-left:18px">
+          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">history</i> View your recent checks history</li>
+          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">insights</i> See detailed score breakdowns</li>
+          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">notifications</i> Optional alerts for new flags on known sources</li>
+        </ul>
+
+        <div class="divider" style="margin:16px 0 12px"></div>
+
+        <!-- Form -->
         <form id="registerForm" novalidate>
           <div class="input-field">
             <input id="reg-name" type="text" autocomplete="name" required placeholder="Your name">
@@ -67,8 +52,17 @@
             <label for="reg-password">Password (min 8 chars)</label>
           </div>
 
-          <div class="section" style="margin-top:8px">
-            <button id="btn-register" class="btn btn-cta waves-effect waves-light">
+          <!-- Human check (placeholder UI to echo HIBP style; replace with real CAPTCHA if needed) -->
+          <div class="card-panel" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;display:flex;align-items:center;gap:12px;">
+            <label style="display:flex;align-items:center;gap:10px;margin:0;cursor:pointer;">
+              <input type="checkbox" id="human-check" />
+              <span>Verify you are human</span>
+            </label>
+            <span class="chip" style="margin-left:auto">Cloudflare-style demo</span>
+          </div>
+
+          <div class="section" style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button id="btn-register" class="btn btn-cta waves-effect waves-light" type="submit" disabled>
               <i class="material-icons left">person_add</i>Create account
             </button>
             <a href="/frontend/login.html" class="btn-flat auth-hint">Already have an account? Log in</a>
@@ -81,5 +75,20 @@
   <footer class="page-footer footer-compact">
     <div class="container">© 2025 Group 11 · Fake News Identifier</div>
   </footer>
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/navbar.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chk = document.getElementById('human-check');
+      const btn = document.getElementById('btn-register');
+      if (chk && btn) {
+        chk.addEventListener('change', () => { btn.disabled = !chk.checked; });
+      }
+    });
+  </script>
 </body>
 </html>

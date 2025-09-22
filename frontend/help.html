@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <base href="/frontend/"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Fake News Identifier</title>
+
+  <!-- CSS: Materialize then our styles (order matters) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body class="theme-dark" id="home">
+
+  <div id="navbar-container"></div>
+
+  <!-- HERO -->
+  <header class="hero container">
+    <h1 class="hero-title">Help</h1>
+  </header>
+  <main class="container main-wrap">
+
+    <!-- How to use -->
+    <div class="card section-block">
+      <div class="card-content">
+        <span class="card-title"><i class="material-icons left">play_circle_outline</i>How to use this tool</span>
+        <ol class="browser-default">
+          <li>Paste a news headline or link into the search bar on the home page.</li>
+          <li>Click <b>Analyze</b> — the tool will process your input in real time.</li>
+          <li>View the credibility score, verdict, and flagged keywords.</li>
+          <li>Click <b>Dashboard</b> (available after signing up) to see your past searches.</li>
+        </ol>
+      </div>
+    </div>
+
+   <!-- Understanding results -->
+<div class="card section-block">
+  <div class="card-content">
+    <span class="card-title"><i class="material-icons left">insights</i>Understanding the results</span>
+
+    <ul class="browser-default">
+      <li><b>Verdict</b> — quick indicator of overall trust level.</li>
+      <li><b>Credibility score</b> — 0–100 scale; higher = more trustworthy.</li>
+      <li><b>Source reputation</b> — the domain’s label and color badge:</li>
+    </ul>
+
+    <!-- visual legend -->
+    <div class="chip green" title="Source with a good reputation">Trusted</div>
+    <div class="chip red" title="Source known to publish misinformation">Untrusted</div>
+    <div class="chip grey" title="We don’t have enough info on this source">Unknown</div>
+
+    <div class="divider" style="margin:16px 0"></div>
+
+    <p class="grey-text text-lighten-1" style="margin-bottom:8px">
+      <i class="material-icons tiny">palette</i> Score color scale:
+    </p>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span class="chip red">0–39: Potentially Misleading</span>
+      <span class="chip amber">40–69: Needs Caution</span>
+      <span class="chip green">70–100: Likely Trustworthy</span>
+    </div>
+
+    <p class="grey-text text-lighten-1" style="margin-top:12px">
+      <i class="material-icons tiny">info</i> Scores are advisory — always verify important claims via multiple sources.
+    </p>
+  </div>
+</div>
+
+
+    <!-- Spotting misleading content -->
+    <div class="card section-block">
+      <div class="card-content">
+        <span class="card-title"><i class="material-icons left">warning</i>Spotting misleading content</span>
+        <ul class="browser-default">
+          <li>Over-the-top headlines (ALL CAPS, emojis, extreme claims).</li>
+          <li>No author/date or suspicious “About” page.</li>
+          <li>Single anonymous source or cropped screenshots without links.</li>
+          <li>Statistics without methodology or context.</li>
+          <li>Images out of context — try a reverse-image search.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Accessibility & privacy -->
+    <div class="card section-block">
+      <div class="card-content">
+        <span class="card-title"><i class="material-icons left">accessibility</i>Accessibility & privacy</span>
+        <ul class="browser-default">
+          <li>Keyboard & screen-reader friendly (ARIA roles, sensible focus order).</li>
+          <li>No personal data required to analyze a headline or link.</li>
+          <li>Data from signed-in users is anonymised and can be deleted anytime.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="center-align section">
+      <a href="/frontend/index.html#home" class="btn">
+        <i class="material-icons left">arrow_back</i>Back to Home
+      </a>
+    </div>
+  </main>
+
+  <footer class="page-footer footer-compact">
+    <div class="container">© 2025 Group 11 · Fake News Identifier · Built with Materialize & Vanilla JS</div>
+  </footer>
+
+<script src="js/navbar.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/analyze.js"></script>
+</body>
+</html>
