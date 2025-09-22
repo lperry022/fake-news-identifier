@@ -40,3 +40,18 @@ function updateAuthUI() {
     el.style.display = isLoggedIn ? 'none' : '';
   });
 }
+
+function updateAuthUI() {
+  const isLoggedIn = Auth.isLoggedIn();
+  document.querySelectorAll('.auth-logged-in').forEach(el => el.style.display = isLoggedIn ? '' : 'none');
+  document.querySelectorAll('.auth-logged-out').forEach(el => el.style.display = isLoggedIn ? 'none' : '');
+}
+
+logoutLinks.forEach(link =>
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    Auth.clear();
+    try { M.toast({ html: 'Logged out', classes: 'blue darken-2' }); } catch(_) {}
+    setTimeout(() => (window.location.href = '/frontend/index.html'), 600);
+  })
+);

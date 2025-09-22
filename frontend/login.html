@@ -72,6 +72,21 @@
         pwd.focus();
       });
     });
+    // Example login handler
+async function onLoginSubmit(e) {
+  e.preventDefault();
+  // const { token, name } = await (await fetch('/api/auth/login', {...})).json();
+  // For demo, assume you get token + name:
+  const token = loginResponse.token;     // <- from backend
+  const name  = loginResponse.name || '';
+
+  Auth.setToken(token);
+  if (name) localStorage.setItem('userName', name);
+
+  try { M.toast({ html: 'Welcome!', classes: 'green darken-2' }); } catch(_) {}
+  Auth.completeLoginAndRedirect('/frontend/dashboard.html');
+}
+
   </script>
     <script src="js/navbar.js"></script>
   <script src="js/app.js"></script>
