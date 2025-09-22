@@ -301,3 +301,16 @@ body.theme-dark{
 
 /* tiny eye icon color on password reveal */
 .toggle-eye { color: #cfd3ff; }
+
+
+/* traffic-light colors for score & chips */
+.progress .determinate.green { background:#43a047; }
+.progress .determinate.amber { background:#ffb300; }
+.progress .determinate.red   { background:#e53935; }
+
+.chip.green { background:#1b5e20; color:#fff; }
+.chip.amber { background:#ff8f00; color:#000; }
+.chip.red   { background:#b71c1c; color:#fff; }
+
+/* dark list variant already used in your HTML */
+.dark-collection .collection-item { background: #1e1e1e; color: #eee; }
