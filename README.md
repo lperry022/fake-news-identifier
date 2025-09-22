@@ -85,6 +85,42 @@ npm run start
 # → http://localhost:3000
 
 
+**Location:** `backend/`  
+**Built with:** Express, Mongoose, `express-session` + `connect-mongo`, `bcryptjs`, `helmet`, `express-rate-limit` (ES Modules)
+
+### What it does
+- 🔐 **Auth** — register, login, logout, `GET /auth/me` (session cookie in MongoDB).
+- 👤 **Profile** — `GET /api/profile`, `PUT /api/profile` (change display name).
+- 🧪 **Analyze** — `POST /api/analyze` combines **source reputation** + **sensational keyword** checks.
+- 🩺 **Health** — `GET /api/health` reports server time & Mongo status.
+- 🌐 **Static** — serves the `frontend/` folder (single origin for API + assets).
+
+### Environment (.env)
+Create **`backend/.env`**:
+```env
+MONGO_URI=mongodb://127.0.0.1:27017/fni
+SESSION_SECRET=replace_me
+PORT=3000
+
+If MONGO_URI is missing, the code falls back to mongodb://127.0.0.1:27017/fni.
+
+
+Start Dev
+npm install
+
+# Start Mongo (choose one)
+brew services start mongodb-community
+# or:
+# docker run -d --name mongo -p 27017:27017 mongo:6
+
+# Seed reputation sources (e.g., bbc.com → Trusted, theonion.com → Untrusted)
+npm run seed:sources
+
+# Start app (serves frontend/ too)
+npm run start
+# → http://localhost:3000
+
+
 ---
 
 ## Project Structure 🗂️
