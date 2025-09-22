@@ -14,3 +14,7 @@ backend/models/
 backend/routes/
 backend/scripts/
 backend/sockets/
+
+# Node & macOS
+node_modules/
+.DS_Store
