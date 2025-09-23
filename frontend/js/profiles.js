@@ -1,123 +1,60 @@
-// ---------- helpers ----------
-const $  = (sel) => document.querySelector(sel);
-const $$ = (sel) => Array.from(document.querySelectorAll(sel));
-const toast = (msg) => window.M && M.toast({ html: msg });
+// profile.js – fetch & render current user; allow renaming
+console.log("PROFILE.JS LOADED v2");
 
-async function getJSON(url, opts = {}) {
-  const res = await fetch(url, opts);
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error || res.statusText);
-  return data;
-}
-async function postJSON(url, body) {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(body)
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error || res.statusText);
-  return data;
-}
-async function putJSON(url, body) {
-  const res = await fetch(url, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify(body)
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data?.error || res.statusText);
-  return data;
-}
-function pushEvent(text) {
-  const ul = $("#rtList");
-  if (!ul) return;
-  if (ul.firstElementChild && ul.firstElementChild.textContent.includes("Waiting")) {
-    ul.innerHTML = "";
-  }
-  const li = document.createElement("li");
-  li.className = "collection-item";
-  li.textContent = text;
-  ul.prepend(li);
-}
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadProfile();
 
-// ---------- main ----------
-document.addEventListener("DOMContentLoaded", async () => {
-  // init Materialize
-  if (window.M) M.AutoInit();
-
-  // 1) ensure logged in
-  let me = null;
-  try {
-    const out = await getJSON("/auth/me", { credentials: "include" });
-    me = out?.user || null;
-  } catch {}
-  if (!me) {
-    toast("Please log in first");
-    window.location.href = "/";   // send to home (your modal can open there)
-    return;
-  }
-
-  // 2) load profile (name/email)
-  try {
-    // If you have /api/profile, prefer that; else /auth/me has enough
-    const prof = await getJSON("/api/profile", { credentials: "include" }).catch(() => ({ user: me }));
-    const user = prof?.user || me;
-    $("#nameVal").textContent  = user.name || "—";
-    $("#emailVal").textContent = user.email || "—";
-    $("#newName").value = user.name || "";
-    // keep label floated
-    const label = document.querySelector('label[for="newName"]');
-    label && label.classList.add("active");
-  } catch (e) {
-    toast("Failed to load profile");
-  }
-
-  // 3) save name
-  $("#btn-save-name")?.addEventListener("click", async () => {
-    const name = ($("#newName")?.value || "").trim();
-    if (!name) return toast("Enter a name");
+  const form = document.getElementById('nameForm');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('new-name')?.value?.trim();
+    if (!name) {
+      try { M.toast({ html: 'Please enter a name', classes: 'red darken-2' }); } catch (_){}
+      return;
+    }
     try {
-      const res = await putJSON("/api/profile", { name });
-      $("#nameVal").textContent = res?.user?.name || name;
-      toast("Profile updated");
-      pushEvent("You updated your name");
-    } catch (e) {
-      toast(e.message || "Failed to update");
+      // prefer /user/name if present, otherwise you can add a /auth/name route similarly
+      const res = await fetch('/user/name', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.error || res.statusText);
+
+      document.getElementById('profile-name').textContent = data.user.name;
+      localStorage.setItem('userName', data.user.name);
+      try { M.toast({ html: 'Name updated', classes: 'green darken-2' }); } catch (_){}
+    } catch (err) {
+      console.error(err);
+      try { M.toast({ html: err.message || 'Update failed', classes: 'red darken-2' }); } catch (_){}
     }
   });
-
-  // 4) logout
-  $("#btn-logout")?.addEventListener("click", async () => {
-    try { await postJSON("/auth/logout", {}); } catch {}
-    window.location.href = "/";
-  });
-
-  // 5) socket.io (optional realtime)
-  try {
-    const socket = io({ withCredentials: true });
-    socket.on("connect", () => pushEvent("Socket connected"));
-    socket.on("disconnect", () => pushEvent("Socket disconnected"));
-
-    // listen to a couple of likely event names
-    socket.on("profile:update", (payload) => {
-      if (payload?.name) {
-        $("#nameVal").textContent = payload.name;
-        $("#newName").value = payload.name;
-      }
-      pushEvent("Profile updated from another tab");
-      toast("Profile updated on server");
-    });
-    socket.on("profile:updated", (payload) => {
-      if (payload?.name) {
-        $("#nameVal").textContent = payload.name;
-        $("#newName").value = payload.name;
-      }
-      pushEvent("Profile updated (event)");
-    });
-  } catch {
-    // sockets are optional; ignore if not configured
-  }
 });
+
+async function loadProfile() {
+  const fill = (u) => {
+    document.getElementById('profile-name').textContent = u.name || '—';
+    document.getElementById('profile-email').textContent = u.email || '—';
+    document.getElementById('profile-id').textContent = u.id || u._id || '—';
+    if (u.name) localStorage.setItem('userName', u.name);
+  };
+
+  // try /user/me first, then /auth/me for compatibility
+  const tryEndpoints = ['/user/me', '/auth/me'];
+  for (const url of tryEndpoints) {
+    try {
+      const res = await fetch(url, { credentials: 'include' });
+      if (res.status === 401) continue;              // not authed here → try next
+      if (!res.ok) continue;
+      const data = await res.json().catch(() => ({}));
+      if (data?.user) { fill(data.user); return; }
+    } catch (_) { /* continue */ }
+  }
+
+  // if we reach here, we’re not authenticated or route missing
+  console.warn('No /user(me) data; redirecting to login');
+  try { M.toast({ html: 'Please log in again', classes: 'red darken-2' }); } catch (_){}
+  setTimeout(() => (window.location.href = '/frontend/login.html?redirect=profile.html'), 800);
+}

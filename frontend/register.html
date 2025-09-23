@@ -4,42 +4,31 @@
   <meta charset="utf-8"/>
   <base href="/frontend/"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Create account • Fake News Identifier</title>
+  <title>Register • Fake News Identifier</title>
 
-  <!-- CSS (order matters) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=5"/>
+  <link rel="stylesheet" href="css/styles.css"/>
+
+  <!-- Load site libs once -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
+  <script src="js/app.js" defer></script>
 </head>
 <body class="theme-dark">
-
-  <!-- shared navbar -->
   <div id="navbar-container"></div>
 
   <main class="container auth-wrap">
-    <!-- HIBP-style hero -->
-    <h1 class="auth-hero center-align" style="margin-top:28px;">Create Your Account</h1>
+    <h1 class="auth-hero center-align" style="margin-top:28px;">Create account</h1>
     <p class="grey-text text-lighten-1 center-align" style="margin-bottom:24px">
-      Access personalised features and manage your Fake News Identifier dashboard.
+      Register to save your checks and access your dashboard.
     </p>
 
-    <!-- Centered panel -->
-    <div class="card auth-card" style="max-width:760px;margin:0 auto;">
+    <div class="card auth-card" style="max-width:500px;margin:0 auto;">
       <div class="card-content white-text">
-        <h5 style="margin-top:0">Why create an account?</h5>
-        <ul class="browser-default" style="margin-left:18px">
-          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">history</i> View your recent checks history</li>
-          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">insights</i> See detailed score breakdowns</li>
-          <li><i class="material-icons tiny" style="vertical-align:-3px;margin-right:6px">notifications</i> Optional alerts for new flags on known sources</li>
-        </ul>
-
-        <div class="divider" style="margin:16px 0 12px"></div>
-
-        <!-- Form -->
         <form id="registerForm" novalidate>
           <div class="input-field">
-            <input id="reg-name" type="text" autocomplete="name" required placeholder="Your name">
-            <label for="reg-name">Full name</label>
+            <input id="reg-name" type="text" required placeholder="Your name">
+            <label for="reg-name">Name</label>
           </div>
 
           <div class="input-field">
@@ -48,18 +37,16 @@
           </div>
 
           <div class="input-field">
-            <input id="reg-password" type="password" autocomplete="new-password" minlength="8" required placeholder="********">
-            <label for="reg-password">Password (min 8 chars)</label>
+            <input id="reg-password" type="password" autocomplete="new-password" required placeholder="********">
+            <label for="reg-password">Password</label>
           </div>
 
-          <!-- Human check (placeholder UI to echo HIBP style; replace with real CAPTCHA if needed) -->
-          <div class="card-panel" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;display:flex;align-items:center;gap:12px;">
-            <label style="display:flex;align-items:center;gap:10px;margin:0;cursor:pointer;">
+          <p>
+            <label>
               <input type="checkbox" id="human-check" />
-              <span>Verify you are human</span>
+              <span>I’m not a bot</span>
             </label>
-            <span class="chip" style="margin-left:auto">Cloudflare-style demo</span>
-          </div>
+          </p>
 
           <div class="section" style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
             <button id="btn-register" class="btn btn-cta waves-effect waves-light" type="submit" disabled>
@@ -76,19 +63,46 @@
     <div class="container">© 2025 Group 11 · Fake News Identifier</div>
   </footer>
 
-  <!-- JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script src="js/app.js"></script>
   <script src="js/navbar.js"></script>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const chk = document.getElementById('human-check');
-      const btn = document.getElementById('btn-register');
-      if (chk && btn) {
-        chk.addEventListener('change', () => { btn.disabled = !chk.checked; });
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('registerForm');
+    const chk  = document.getElementById('human-check');
+    const btn  = document.getElementById('btn-register');
+
+    if (chk && btn) chk.addEventListener('change', () => { btn.disabled = !chk.checked; });
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name')?.value?.trim();
+      const email = document.getElementById('reg-email')?.value?.trim();
+      const password = document.getElementById('reg-password')?.value || '';
+
+      if (!name || !email || !password) {
+        M.toast({ html: 'Name, email, and password are required', classes: 'red darken-2' });
+        return;
+      }
+
+      try {
+        const res = await fetch('/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data?.error || res.statusText);
+
+        Auth.setToken('session');
+        localStorage.setItem('userName', data?.user?.name || name);
+        M.toast({ html: 'Account created!', classes: 'green darken-2' });
+        Auth.completeLoginAndRedirect('/frontend/dashboard.html');
+      } catch (err) {
+        M.toast({ html: err.message || 'Registration failed', classes: 'red darken-2' });
       }
     });
+  });
   </script>
 </body>
 </html>

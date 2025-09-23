@@ -1,39 +1,32 @@
 // backend/controllers/analyzeController.js
-import { Source } from "../models/source.js";
+import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-
-// backend/controllers/analyzeController.js (only the helpers need changing)
+import { Check } from "../models/Check.js";
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
   "guaranteed","you won't believe","truth","debunked","cover-up","leaked"
 ];
 
-// Accepts full URLs, scheme-less domains like "bbc.com/news",
-// and strips m./www. prefixes. Returns null if no domain found.
+// Accepts full URLs (http/https), "bbc.com/news", etc.
+// Normalizes m./www. and returns hostname; null if not a URL/domain.
 function extractDomain(input) {
   if (!input) return null;
   const raw = String(input).trim();
 
-  // 1) If it already looks like a URL, parse directly
   if (/^https?:\/\//i.test(raw)) {
     try {
       const u = new URL(raw);
       return u.hostname.replace(/^m\./i,"").replace(/^www\./i,"").toLowerCase();
     } catch { /* fall through */ }
   }
-
-  // 2) Scheme-less domain like "bbc.com/news" or "www.theonion.com"
-  //    (no spaces and contains a dot = likely a domain)
   if (!/\s/.test(raw) && raw.includes(".")) {
     try {
       const u = new URL(`https://${raw}`);
       return u.hostname.replace(/^m\./i,"").replace(/^www\./i,"").toLowerCase();
     } catch { /* fall through */ }
   }
-
-  // 3) Otherwise, we treat as a headline (no domain)
-  return null;
+  return null; // treat as headline
 }
 
 function keywordFlags(text) {
@@ -56,32 +49,60 @@ function verdictFrom(score) {
 }
 
 export async function analyze(req, res) {
-  const inputRaw = (req.body?.input || "").trim();
-  if (!inputRaw) return res.status(400).json({ error: "Missing input" });
+  try {
+    const inputRaw = (req.body?.input || "").trim();
+    if (!inputRaw) return res.status(400).json({ error: "Missing input" });
 
-  const domain = extractDomain(inputRaw);
+    const domain = extractDomain(inputRaw);
 
-  // source reputation
-  let sourceLabel = "Unknown";
-  if (domain) {
-    const src = await Source.findOne({ domain }).lean();
-    sourceLabel = src?.label || "Unknown";
+    // look up source reputation
+    let sourceLabel = "Unknown";
+    if (domain) {
+      const src = await Source.findOne({ domain }).lean();
+      sourceLabel = src?.label || "Unknown";
+    }
+
+    const flags = keywordFlags(inputRaw);
+    const score = scoreFrom(sourceLabel, flags.length);
+    const verdict = verdictFrom(score);
+
+    // Log every analysis (optional but nice to keep)
+    try {
+      await AnalysisLog.create({
+        userId: req.session?.userId || undefined,
+        input: inputRaw,
+        inputType: domain ? "url" : "headline",
+        domain,
+        sourceLabel,
+        verdict,
+        score,
+        flags
+      });
+    } catch (e) {
+      console.error("AnalysisLog create failed:", e);
+    }
+
+    // Save to user's history for dashboard (only if logged in)
+    if (req.session?.userId) {
+      try {
+        await Check.create({
+          userId: req.session.userId,
+          inputType: domain ? "url" : "headline",
+          inputText: domain ? "" : inputRaw,
+          inputUrl: domain ? inputRaw : "",
+          score,
+          flags,
+          sourceLabel,
+          meta: { domain, verdict }
+        });
+      } catch (e) {
+        console.error("Check create failed:", e);
+      }
+    }
+
+    return res.json({ verdict, score, sourceLabel, flags, domain });
+  } catch (err) {
+    console.error("ANALYZE_ERROR:", err);
+    return res.status(500).json({ error: "Internal error" });
   }
-
-  const flags = keywordFlags(inputRaw);
-  const score = scoreFrom(sourceLabel, flags.length);
-  const verdict = verdictFrom(score);
-
-  await AnalysisLog.create({
-    userId: req.session?.userId || undefined,
-    input: inputRaw,
-    inputType: domain ? "url" : "headline",
-    domain,
-    sourceLabel,
-    verdict,
-    score,
-    flags
-  });
-
-  return res.json({ verdict, score, sourceLabel, flags });
 }
