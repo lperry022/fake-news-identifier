@@ -6,90 +6,136 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Log in • Fake News Identifier</title>
 
-  <!-- CSS order: Materialize first, then icons, then your site styles -->
+  <!-- CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css"/>
 
-  <!-- JS -->
+  <!-- JS libs (load ONCE) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 <body class="theme-dark">
 
   <div id="navbar-container"></div>
- <main class="container auth-wrap">
-  <h1 class="auth-hero center-align" style="margin-top:28px;">Log in</h1>
-  <p class="grey-text text-lighten-1 center-align" style="margin-bottom:24px">
-    Access your dashboard and see your past checks.
-  </p>
 
-  <div class="card auth-card" style="max-width:500px;margin:0 auto;">
-    <div class="card-content white-text">
-      <form id="loginForm" novalidate>
-        <div class="input-field">
-          <input id="login-email" type="email" autocomplete="email" required placeholder="you@example.com">
-          <label for="login-email">Email</label>
-        </div>
+  <main class="container auth-wrap">
+    <h1 class="auth-hero center-align" style="margin-top:28px;">Log in</h1>
+    <p class="grey-text text-lighten-1 center-align" style="margin-bottom:24px">
+      Access your dashboard and see your past checks.
+    </p>
 
-        <div class="input-field">
-          <input id="login-password" type="password" autocomplete="current-password" required placeholder="********">
-          <label for="login-password">Password</label>
-        </div>
+    <div class="card auth-card" style="max-width:500px;margin:0 auto;">
+      <div class="card-content white-text">
+        <form id="loginForm" novalidate autocomplete="off">
+          <div class="input-field">
+            <input id="login-email" type="email" autocomplete="email" autocapitalize="none" spellcheck="false" required placeholder="you@example.com">
+            <label for="login-email">Email</label>
+          </div>
 
-        <p>
-          <label>
-            <input type="checkbox" id="rememberMe" />
-            <span>Remember me on this device</span>
-          </label>
-        </p>
+          <div class="input-field">
+            <input id="login-password" type="password" autocomplete="current-password" required placeholder="********">
+            <label for="login-password">Password</label>
+          </div>
 
-        <div class="section" style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-          <button class="btn btn-cta waves-effect waves-light" type="submit">
-            <i class="material-icons left">login</i>Log in
-          </button>
-          <a href="/frontend/register.html" class="btn-flat auth-hint">Need an account? Create one</a>
-        </div>
-      </form>
+          <p>
+            <label>
+              <input type="checkbox" id="rememberMe" />
+              <span>Remember me on this device</span>
+            </label>
+          </p>
+
+          <div class="section" style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <button id="btn-login" class="btn btn-cta waves-effect waves-light" type="submit">
+              <i class="material-icons left">login</i>Log in
+            </button>
+            <a href="/frontend/register.html" class="btn-flat auth-hint">Need an account? Create one</a>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</main>
-
+  </main>
 
   <footer class="page-footer footer-compact">
     <div class="container">© 2025 Group 11 · Fake News Identifier</div>
   </footer>
 
-  <!-- Tiny page-only script for the eye toggle -->
+  <!-- Only navbar + this page’s script. Do NOT include app.js again or analyze.js here -->
+  <script src="js/navbar.js"></script>
+
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const pwd = document.getElementById('login-password');
-      const btn = document.getElementById('togglePwd');
-      btn?.addEventListener('click', () => {
-        const show = pwd.type === 'password';
-        pwd.type = show ? 'text' : 'password';
-        btn.querySelector('i').textContent = show ? 'visibility_off' : 'visibility';
-        pwd.focus();
-      });
-    });
-    // Example login handler
-async function onLoginSubmit(e) {
-  e.preventDefault();
-  // const { token, name } = await (await fetch('/api/auth/login', {...})).json();
-  // For demo, assume you get token + name:
-  const token = loginResponse.token;     // <- from backend
-  const name  = loginResponse.name || '';
+  // Guard against multiple bindings or auto-submission
+  if (!window.__LOGIN_INIT__) {
+    window.__LOGIN_INIT__ = true;
+    console.log('LOGIN.JS INIT');
 
-  Auth.setToken(token);
-  if (name) localStorage.setItem('userName', name);
+    let submitting = false;
 
-  try { M.toast({ html: 'Welcome!', classes: 'green darken-2' }); } catch(_) {}
-  Auth.completeLoginAndRedirect('/frontend/dashboard.html');
-}
+    const ready = () => {
+      const form = document.getElementById('loginForm');
+      const btn  = document.getElementById('btn-login');
+      if (!form) return;
 
+      // Prevent browser from trying to auto-submit on autofill
+      form.setAttribute('aria-live', 'polite');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (submitting) return;          // ⛔️ stop double fires
+        submitting = true;
+        btn?.setAttribute('disabled', 'true');
+
+        const email = document.getElementById('login-email')?.value?.trim();
+        const password = document.getElementById('login-password')?.value || '';
+
+        if (!email || !password) {
+          M.toast({ html: 'Email and password are required', classes: 'red darken-2' });
+          submitting = false;
+          btn?.removeAttribute('disabled');
+          return;
+        }
+
+        try {
+          const res = await fetch('/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email, password })
+          });
+
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data?.error || res.statusText);
+
+          // Mark client as logged in (UI only; real auth is cookie)
+          Auth.setToken('session');
+          if (data?.user?.name) localStorage.setItem('userName', data.user.name);
+
+          M.toast({ html: 'Welcome!', classes: 'green darken-2' });
+
+          // Respect ?redirect=... if present, otherwise dashboard
+          const url = new URL(window.location.href);
+          const redirect = url.searchParams.get('redirect') || '/frontend/dashboard.html';
+          window.location.replace(redirect);
+        } catch (err) {
+          console.error(err);
+          M.toast({ html: err.message || 'Login failed', classes: 'red darken-2' });
+        } finally {
+          // In case the page stays here (failed login), re-enable typing
+          submitting = false;
+          btn?.removeAttribute('disabled');
+        }
+      }, { passive: false });
+    };
+
+    // If the page came from bfcache, reset the guard so you can submit again
+    window.addEventListener('pageshow', () => { submitting = false; });
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', ready);
+    } else {
+      ready();
+    }
+  }
   </script>
-    <script src="js/navbar.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/analyze.js"></script>
 </body>
 </html>

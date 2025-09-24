@@ -1,57 +1,43 @@
-// navbar.js - inject navbar and toggle based on auth state
-document.addEventListener('DOMContentLoaded', async () => {
-  const container = document.getElementById('navbar-container');
-  if (!container) return;
+// navbar.js - inject navbar and toggle based on auth state (one-time init)
+if (!window.__NAVBAR_INIT__) {
+  window.__NAVBAR_INIT__ = true;
 
-  // ✅ correct path to your partials folder
-  try {
-    const res = await fetch('/frontend/partials/navbar.html');
-    container.innerHTML = await res.text();
-  } catch (e) {
-    console.error('Failed to load navbar:', e);
-    return; // bail if nav couldn't load
-  }
+  document.addEventListener('DOMContentLoaded', async () => {
+    const container = document.getElementById('navbar-container');
+    if (!container) return;
 
-  // init Materialize sidenav
-  M.Sidenav.init(document.querySelectorAll('.sidenav'));
+    try {
+      const res = await fetch('/frontend/partials/navbar.html');
+      container.innerHTML = await res.text();
+    } catch (e) {
+      console.error('Failed to load navbar:', e);
+      return;
+    }
 
-  updateAuthUI();
+    // Init Materialize components
+    if (window.M?.Sidenav) M.Sidenav.init(document.querySelectorAll('.sidenav'));
 
-  // logout handlers
-  document.querySelectorAll('#nav-logout, #m-nav-logout').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      localStorage.removeItem('userToken');
-      localStorage.removeItem('userName');
-      M.toast({ html: 'Logged out', classes: 'blue darken-2' });
-      setTimeout(() => (window.location.href = '/frontend/index.html'), 600);
+    function updateAuthUI() {
+      const isLoggedIn = window.Auth?.isLoggedIn?.() ?? false;
+      document.querySelectorAll('.auth-logged-in').forEach(el => el.style.display = isLoggedIn ? '' : 'none');
+      document.querySelectorAll('.auth-logged-out').forEach(el => el.style.display = isLoggedIn ? 'none' : '');
+      const name = localStorage.getItem('userName');
+      document.querySelectorAll('.nav-user-name').forEach(el => { el.textContent = name || 'User'; });
+    }
+
+    // Logout wiring (one-time)
+    document.querySelectorAll('#nav-logout, #m-nav-logout').forEach(link => {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          await fetch('/auth/logout', { method: 'POST', credentials: 'include' });
+        } catch (_) {}
+        window.Auth?.clear?.();
+        try { M.toast({ html: 'Logged out', classes: 'blue darken-2' }); } catch(_) {}
+        setTimeout(() => (window.location.href = '/frontend/index.html'), 400);
+      }, { once: true });
     });
-  });
-});
 
-function updateAuthUI() {
-  const isLoggedIn = Boolean(localStorage.getItem('userToken'));
-
-  // ✅ only use the auth classes; do NOT hide by href
-  document.querySelectorAll('.auth-logged-in').forEach(el => {
-    el.style.display = isLoggedIn ? '' : 'none';
-  });
-  document.querySelectorAll('.auth-logged-out').forEach(el => {
-    el.style.display = isLoggedIn ? 'none' : '';
+    updateAuthUI();
   });
 }
-
-function updateAuthUI() {
-  const isLoggedIn = Auth.isLoggedIn();
-  document.querySelectorAll('.auth-logged-in').forEach(el => el.style.display = isLoggedIn ? '' : 'none');
-  document.querySelectorAll('.auth-logged-out').forEach(el => el.style.display = isLoggedIn ? 'none' : '');
-}
-
-logoutLinks.forEach(link =>
-  link.addEventListener('click', e => {
-    e.preventDefault();
-    Auth.clear();
-    try { M.toast({ html: 'Logged out', classes: 'blue darken-2' }); } catch(_) {}
-    setTimeout(() => (window.location.href = '/frontend/index.html'), 600);
-  })
-);

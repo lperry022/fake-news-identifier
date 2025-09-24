@@ -340,3 +340,108 @@ table.dash-table tbody tr:hover{
   line-height:1;
 }
 
+
+/* ===== Dashboard polish ===== */
+.stat-card {
+  background: linear-gradient(135deg, rgba(120,86,255,.25), rgba(94,175,255,.18));
+  border-radius: 16px;
+}
+.stat-number { margin: 6px 0 0 0; font-weight: 700; }
+
+.card-check {
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+}
+
+.score-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  margin: 6px 0 10px 2px;
+}
+.score-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  font-weight: 700; font-size: 14px; color: #0b0b13;
+  background: #ddd;
+}
+.scorebar { height: 10px; background: rgba(255,255,255,.08); border-radius: 10px; }
+.progress .determinate { border-radius: 10px; }
+
+.score-badge.green, .progress .determinate.green { background-color: #43a047 !important; }
+.score-badge.amber, .progress .determinate.amber { background-color: #ffb300 !important; }
+.score-badge.red,   .progress .determinate.red   { background-color: #e53935 !important; }
+
+.chips-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+.chip-source { font-weight: 600; }
+.chip-source.trusted   { background: rgba(67,160,71,.25); color: #8be19a; }
+.chip-source.untrusted { background: rgba(229,57,53,.25); color: #ff9a96; }
+.chip-source.unknown   { background: rgba(255,179,0,.20); color: #ffd480; }
+
+.chip-flag { background: rgba(255,255,255,.08); color: #d7d7e0; }
+
+.source-chip { cursor: pointer; margin-right: 6px; }
+.source-chip.active { background: rgba(94,175,255,.25); }
+
+
+/* ---------- Dark theme input fixes ---------- */
+:root{
+  --text-primary:#eaeaf2;
+  --text-secondary:#b6b7c9;
+  --accent:#76a2ff;
+  --field-bg:#141527; /* used for autofill mask */
+}
+
+/* Input text & caret colours */
+.theme-dark .input-field input[type=text],
+.theme-dark .input-field input[type=search],
+.theme-dark .input-field input[type=email],
+.theme-dark .input-field input[type=password],
+.theme-dark .input-field input[type=url],
+.theme-dark .materialize-textarea {
+  color: var(--text-primary) !important;
+  caret-color: var(--text-primary);
+}
+
+/* Labels */
+.theme-dark .input-field label {
+  color: var(--text-secondary) !important;
+}
+.theme-dark .input-field input:focus + label,
+.theme-dark .materialize-textarea:focus + label {
+  color: var(--accent) !important;
+}
+
+/* Underline / focus ring */
+.theme-dark .input-field input,
+.theme-dark .materialize-textarea {
+  border-bottom: 1px solid rgba(255,255,255,.18) !important;
+  box-shadow: none !important;
+}
+.theme-dark .input-field input:focus,
+.theme-dark .materialize-textarea:focus {
+  border-bottom: 1px solid var(--accent) !important;
+  box-shadow: 0 1px 0 0 var(--accent) !important;
+}
+
+/* Prefix icon colour (e.g., search icon) */
+.theme-dark .input-field .prefix {
+  color: var(--text-secondary) !important;
+}
+
+/* Placeholder text */
+.theme-dark ::placeholder { color: rgba(234,234,242,.55) !important; }
+.theme-dark :-ms-input-placeholder { color: rgba(234,234,242,.55) !important; } /* IE11 */
+.theme-dark ::-ms-input-placeholder { color: rgba(234,234,242,.55) !important; } /* Edge Legacy */
+
+/* Autofill (Chrome/Safari) – remove yellow and set light text */
+.theme-dark input:-webkit-autofill,
+.theme-dark textarea:-webkit-autofill,
+.theme-dark select:-webkit-autofill {
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 9999s ease-in-out 0s;
+  box-shadow: 0 0 0 1000px var(--field-bg) inset !important;
+}

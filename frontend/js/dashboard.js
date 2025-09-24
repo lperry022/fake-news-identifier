@@ -1,162 +1,190 @@
-// Dashboard client: robust rendering with empty-state row, demo fallback.
-document.addEventListener('DOMContentLoaded', () => {
-  // Give navbar.js a tick to finish toggling auth UI
-  setTimeout(init, 0);
+// dashboard.js – fancy dashboard with cards, filters, and summaries
+console.log("DASHBOARD.JS LOADED");
 
-  function init() {
-    // Initialize selects if present
-    if (window.M && M.FormSelect) M.FormSelect.init(document.querySelectorAll('select'));
+let ALL_ITEMS = [];
+let CURRENT_FILTER = { text: "", source: "all" };
+let PAGE_SIZE = 12;    // render 12 cards at a time
+let renderedCount = 0;
 
-    const tbody       = document.getElementById('logsTable');
-    const emptyState  = document.getElementById('emptyState');
-    const filterSel   = document.getElementById('filterSource');
-    const sortSel     = document.getElementById('sortBy');
-    const searchInp   = document.getElementById('searchText');
-    const btnRefresh  = document.getElementById('btn-refresh');
-    const btnExport   = document.getElementById('btn-export');
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadHistory();
 
-    if (!tbody) {
-      console.warn('dashboard.js: #logsTable not found — check dashboard.html markup.');
+  // wire filters
+  document.getElementById('filter-text')?.addEventListener('input', (e) => {
+    CURRENT_FILTER.text = (e.target.value || "").toLowerCase();
+    rerender();
+  });
+
+  document.querySelectorAll('.source-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.source-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      CURRENT_FILTER.source = chip.dataset.src || "all";
+      rerender();
+    });
+  });
+
+  document.getElementById('btn-load-more')?.addEventListener('click', () => {
+    renderNextPage();
+  });
+});
+
+async function loadHistory() {
+  try {
+    const res = await fetch('/user/history?limit=200', { credentials: 'include' });
+    if (res.status === 401) {
+      M.toast({ html: 'Please log in to view your dashboard', classes: 'red darken-2' });
+      setTimeout(() => (window.location.href = '/frontend/login.html?redirect=dashboard.html'), 800);
       return;
     }
+    const data = await res.json();
+    ALL_ITEMS = data?.items || [];
 
-    let rows = [];
-    let view = [];
-
-    btnRefresh?.addEventListener('click', fetchLogs);
-    btnExport?.addEventListener('click', exportCSV);
-    filterSel?.addEventListener('change', applyAndRender);
-    sortSel?.addEventListener('change', applyAndRender);
-    searchInp?.addEventListener('input', applyAndRender);
-
-    fetchLogs();
-
-    function getToken() {
-      if (window.Auth && typeof Auth.getToken === 'function') return Auth.getToken();
-      return (
-        localStorage.getItem('userToken') ||
-        localStorage.getItem('authToken') ||
-        localStorage.getItem('token') ||
-        sessionStorage.getItem('userToken') ||
-        null
-      );
-    }
-
-    async function fetchLogs() {
-      try {
-        tbody.innerHTML = `<tr><td colspan="4" class="grey-text center-align">Loading…</td></tr>`;
-
-        const token = getToken();
-        const res = await fetch('/api/logs?limit=200', {
-          credentials: 'include', // allow cookie sessions
-          headers: {
-            'Accept': 'application/json',
-            ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-          }
-        });
-
-        if (res.status === 401 || res.status === 403) {
-          // Not logged in → send to login with redirect back here
-          M?.toast({ html: 'Please log in to access the dashboard', classes: 'red darken-2' });
-          const dest = encodeURIComponent('/frontend/dashboard.html');
-          setTimeout(() => { window.location.replace('/frontend/login.html?redirect=' + dest); }, 900);
-          return;
-        }
-
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-
-        const data = await res.json();
-        rows = (data || []).map(x => ({
-          ts:    new Date(x.ts || x.timestamp || Date.now()),
-          input: (x.input || x.headline || x.url || '').trim(),
-          score: Number(x.score ?? 0),
-          source: x.sourceLabel || x.source?.label || 'Unknown'
-        }));
-      } catch (e) {
-        // If fetch fails (dev mode / API down), show demo rows so UI isn't empty
-        rows = [
-          // comment these out if you never want demo data:
-          // { ts:new Date(),                  input:'Breaking: New policy shocks markets', score:38, source:'Unknown' },
-          // { ts:new Date(Date.now()-3600e3), input:'Celebrity cures illness with herb',   score:22, source:'Untrusted' },
-          // { ts:new Date(Date.now()-7200e3), input:'Local council opens new library',     score:82, source:'Trusted'  },
-        ];
-        console.warn('Failed to load logs:', e);
-        if (rows.length) M?.toast({ html: 'Showing demo data', classes: 'orange darken-2' });
-      }
-
-      applyAndRender();
-    }
-
-    function applyAndRender() {
-      view = [...rows];
-
-      const f = filterSel?.value || '';
-      if (f) view = view.filter(r => r.source === f);
-
-      const q = (searchInp?.value || '').toLowerCase().trim();
-      if (q) view = view.filter(r => r.input.toLowerCase().includes(q));
-
-      const s = sortSel?.value || 'ts_desc';
-      view.sort((a,b) => {
-        switch (s) {
-          case 'ts_asc':     return a.ts - b.ts;
-          case 'ts_desc':    return b.ts - a.ts;
-          case 'score_asc':  return a.score - b.score;
-          case 'score_desc': return b.score - a.score;
-          default:           return b.ts - a.ts;
-        }
-      });
-
-      renderTable();
-    }
-
-    function renderTable() {
-      // Always show a body row (either data or empty state)
-      if (!view.length) {
-        emptyState && (emptyState.style.display = 'none'); // we render row instead
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="4" class="grey-text center-align" style="padding: 20px;">
-              <i class="material-icons" style="vertical-align: middle; margin-right: 8px;">history</i>
-              You don’t have any searches yet. Analyze a headline on the home page to see your history here.
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      emptyState && (emptyState.style.display = 'none');
-      tbody.innerHTML = view.map(r => `
-        <tr>
-          <td>${r.ts.toLocaleString()}</td>
-          <td class="truncate" title="${esc(r.input)}">${esc(r.input)}</td>
-          <td>${r.score}</td>
-          <td>
-            <span class="chip ${r.source==='Trusted'?'green':r.source==='Untrusted'?'red':'grey'}">${r.source}</span>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function exportCSV() {
-      if (!view.length) return M?.toast({ html: 'Nothing to export', classes: 'grey darken-2' });
-      const header = ['Time','Input','Score','Source'];
-      const rowsCsv = view.map(r => [
-        r.ts.toISOString(),
-        r.input.replaceAll('"','""'),
-        r.score,
-        r.source
-      ]);
-      const csv = [header, ...rowsCsv].map(cols => cols.map(c => `"${c}"`).join(',')).join('\n');
-      const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
-      const url  = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `fakenews-dashboard-${Date.now()}.csv`;
-      document.body.appendChild(a); a.click(); URL.revokeObjectURL(url); a.remove();
-    }
-
-    function esc(s='') {
-      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
+    updateSummary(ALL_ITEMS);
+    rerender();
+  } catch (err) {
+    console.error(err);
+    M.toast({ html: 'Failed to load history', classes: 'red darken-2' });
   }
-});
+}
+
+function rerender() {
+  // reset grid
+  const grid = document.getElementById('history-grid');
+  grid.innerHTML = "";
+  renderedCount = 0;
+
+  const list = applyFilters(ALL_ITEMS, CURRENT_FILTER);
+  if (!list.length) {
+    document.getElementById('history-empty').style.display = '';
+    document.getElementById('btn-load-more').style.display = 'none';
+    return;
+  }
+  document.getElementById('history-empty').style.display = 'none';
+
+  // render first page
+  renderNextPage(list);
+}
+
+function renderNextPage(list = applyFilters(ALL_ITEMS, CURRENT_FILTER)) {
+  const grid = document.getElementById('history-grid');
+  const end = Math.min(renderedCount + PAGE_SIZE, list.length);
+  const slice = list.slice(renderedCount, end);
+  slice.forEach(item => {
+    grid.insertAdjacentHTML('beforeend', renderCard(item));
+  });
+  renderedCount = end;
+
+  const btn = document.getElementById('btn-load-more');
+  btn.style.display = (renderedCount < list.length) ? '' : 'none';
+  if (M?.AutoInit) M.AutoInit();
+}
+
+// ---- Rendering helpers ----
+function renderCard(item) {
+  const when = new Date(item.createdAt);
+  const niceWhen = when.toLocaleString();
+  const rel = timeAgo(when);
+
+  const title = item.inputType === "url"
+    ? (item.inputUrl || "(URL)")
+    : (item.inputText || "(headline)");
+
+  const flags = (item.flags || []);
+  const label = item.sourceLabel || "Unknown";
+  const score = (item.score ?? 0);
+
+  const scoreClr = scoreToColor(score);
+  const perc = clamp(score, 0, 100);
+
+  return `
+    <div class="col s12 m6 l4">
+      <div class="card card-check">
+        <div class="card-content white-text">
+          <span class="card-title truncate">
+            <i class="material-icons left">flag</i>
+            ${escapeHtml(title)}
+          </span>
+
+          <div class="score-row">
+            <span class="score-badge ${scoreClr}">${perc}</span>
+            <div class="progress scorebar">
+              <div class="determinate ${scoreClr}" style="width:${perc}%"></div>
+            </div>
+          </div>
+
+          <div class="chips-row">
+            ${sourceChip(label)}
+            ${flags.length ? flags.map(f => `<div class="chip chip-flag">${escapeHtml(f)}</div>`).join('') : `<span class="grey-text">No flags</span>`}
+          </div>
+
+          <p class="grey-text lighten-2" style="margin-top:6px;">
+            <i class="material-icons tiny">schedule</i>
+            <span title="${niceWhen}">${rel}</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function sourceChip(label) {
+  const cls = label.toLowerCase();
+  return `<div class="chip chip-source ${cls}">${label}</div>`;
+}
+
+function scoreToColor(s) {
+  if (s >= 70) return 'green';
+  if (s >= 50) return 'amber';
+  return 'red';
+}
+
+function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+
+function timeAgo(date) {
+  const diff = (Date.now() - date.getTime()) / 1000;
+  if (diff < 60) return `just now`;
+  const minutes = diff/60;
+  if (minutes < 60) return `${Math.floor(minutes)} min ago`;
+  const hours = minutes/60;
+  if (hours < 24) return `${Math.floor(hours)} hr ago`;
+  const days = hours/24;
+  if (days < 7) return `${Math.floor(days)} day${days>=2?'s':''} ago`;
+  return date.toLocaleDateString();
+}
+
+function escapeHtml(s) {
+  if (!s) return "";
+  return s.replace(/[&<>"']/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+// ---- Filters & summary ----
+function applyFilters(items, filter) {
+  const text = (filter.text || "").trim();
+  const src = (filter.source || "all");
+  return items.filter(it => {
+    const okSrc = (src === 'all') || ((it.sourceLabel || 'Unknown') === src);
+    if (!okSrc) return false;
+    if (!text) return true;
+
+    const hay = [
+      it.inputText || "",
+      it.inputUrl || "",
+      (it.flags || []).join(" "),
+      (it.sourceLabel || "")
+    ].join(" ").toLowerCase();
+
+    return hay.includes(text);
+  });
+}
+
+function updateSummary(items) {
+  const total = items.length;
+  const avg = total ? Math.round(items.reduce((a, b) => a + (b.score || 0), 0) / total) : null;
+  const trusted = items.filter(i => i.sourceLabel === "Trusted").length;
+  const ratio = total ? Math.round((trusted / total) * 100) : null;
+
+  document.getElementById('sum-total').textContent = total;
+  document.getElementById('sum-avg').textContent = (avg ?? '—');
+  document.getElementById('sum-trusted').textContent = (ratio !== null ? `${ratio}%` : '—');
+}
