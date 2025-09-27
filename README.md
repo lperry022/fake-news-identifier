@@ -5,23 +5,29 @@ This project promotes **media literacy** by helping users verify online content 
 
 ---
 
-## Mandated Tech Stack 🧰
+## 🚀 Mandated Tech Stack
 
-- 🟢 **Node.js** (backend logic)  
-- 🟡 **Vanilla JavaScript** (frontend logic)  
-- 🔵 **HTML & CSS + Materialize** (UI)  
-- 🟣 **MongoDB** (logs & flags)
+- 🟢 **Node.js** — backend logic  
+- 🟡 **Vanilla JavaScript** — frontend logic  
+- 🔵 **HTML & CSS + Materialize** — UI  
+- 🟣 **MongoDB** — logs & flags  
 
-> Full frontend frameworks (e.g., React) are **not** used.
+> ⚠️ Full frontend frameworks (e.g., React) are **not** used.
 
 ---
 
-## Frontend 🎨
+## 🎨 Frontend
 
 **Location:** `frontend/`  
 **Built with:** HTML, CSS (Materialize + custom), Vanilla JS
 
-### What’s included
+### Pages
+- **Landing** — Hero section, input field, “Analyze” button, results card  
+- **Register** — User account creation with inline validation  
+- **Login** — Session login with inline validation and “remember me” option  
+- **Dashboard** — Displays past checks and user profile  
+
+### Features
 - Hero section + pill input field  
 - “Analyze” button (calls backend API)  
 - Results card with **verdict**, **score bar**, **source reputation**, and **flags**  
@@ -29,10 +35,12 @@ This project promotes **media literacy** by helping users verify online content 
 - Mobile-friendly layout with a purple + turquoise theme
 
 ### Run locally
-Choose one:
 
-**A) VS Code Live Server**  
-Open `frontend/index.html` with Live Server.
+**Option A – VS Code Live Server**
+```bash
+# open index.html in Live Server
+frontend/index.html
+
 
 **B) Simple HTTP server**
     
@@ -47,29 +55,31 @@ In `frontend/js/app.js` set the API base if your backend runs on another port/ho
 
 ---
 
-## Backend ⚙️
+## ⚙️ Backend
 
 **Location:** `backend/`  
 **Built with:** Express, Mongoose, `express-session` + `connect-mongo`, `bcryptjs`, `helmet`, `express-rate-limit` (ES Modules)
 
-### What it does
-- 🔐 **Auth** — register, login, logout, `GET /auth/me` (session cookie in MongoDB).
-- 👤 **Profile** — `GET /api/profile`, `PUT /api/profile` (change display name).
-- 🧪 **Analyze** — `POST /api/analyze` combines **source reputation** + **sensational keyword** checks.
-- 🩺 **Health** — `GET /api/health` reports server time & Mongo status.
-- 🌐 **Static** — serves the `frontend/` folder (single origin for API + assets).
+### Core Endpoints
+- 🔐 **Auth** — register, login, logout, `GET /auth/me` (session cookie in MongoDB)  
+- 👤 **Profile** — `GET /api/profile`, `PUT /api/profile` (change display name)  
+- 🧪 **Analyze** — `POST /api/analyze` combines **source reputation** + **sensational keyword** checks  
+- 🩺 **Health** — `GET /api/health` reports server time & Mongo status  
+- 🌐 **Static** — serves the `frontend/` folder (single origin for API + assets)  
 
-### Environment (.env)
+### Environment Setup
 Create **`backend/.env`**:
+
 ```env
 MONGO_URI=mongodb://127.0.0.1:27017/fni
 SESSION_SECRET=replace_me
 PORT=3000
 
+
 If MONGO_URI is missing, the code falls back to mongodb://127.0.0.1:27017/fni.
 
-
-Start Dev
+### Start Development
+cd backend
 npm install
 
 # Start Mongo (choose one)
