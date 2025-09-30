@@ -11,7 +11,6 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { Server } from "socket.io";
 
-import fakeNewsRoutes from "./routes/fakeNewsRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import profileRouter from "./routes/profileRoutes.js";
 import { analyzeRouter } from "./routes/analyzeRoutes.js";
@@ -80,8 +79,6 @@ export function buildApp({ useMemorySession = false } = {}) {
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
   app.use("/api/analyze", analyzeRouter);
-  //app.use("/user", userRoutes);
-  app.use("/api/fakenews", fakeNewsRoutes);
 
   // Optional sockets
   const attachSockets = (server) => {
