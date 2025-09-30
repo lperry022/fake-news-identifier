@@ -1,7 +1,7 @@
 // backend/controllers/analyzeController.js
 import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-import { Check } from "../models/Check.js";
+import Check from "../models/Check.js";
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
@@ -68,7 +68,7 @@ export async function analyze(req, res) {
 
     // Log every analysis (optional but nice to keep)
     try {
-      await AnalysisLog.create({
+      const saved = await AnalysisLog.create({
         userId: req.session?.userId || undefined,
         input: inputRaw,
         inputType: domain ? "url" : "headline",
@@ -78,6 +78,7 @@ export async function analyze(req, res) {
         score,
         flags
       });
+      console.log("✅ Saved AnalysisLog:", saved._id, saved.input);  // 🔹 Debug log here
     } catch (e) {
       console.error("AnalysisLog create failed:", e);
     }
@@ -104,5 +105,29 @@ export async function analyze(req, res) {
   } catch (err) {
     console.error("ANALYZE_ERROR:", err);
     return res.status(500).json({ error: "Internal error" });
+  }
+}
+
+export async function getRecentChecks(req, res) {
+  try {
+    const limit = Math.min(parseInt(req.query.limit || "5", 10), 50);
+
+    const rows = await AnalysisLog.find({})
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .select("createdAt input score sourceLabel")
+      .lean();
+
+    const items = rows.map(r => ({
+      createdAt: r.createdAt,
+      input: r.input,
+      score: r.score,
+      source: r.sourceLabel || "Unknown",
+    }));
+
+    res.json(items);
+  } catch (err) {
+    console.error("RECENT_CHECKS_ERROR:", err);
+    res.status(500).json({ error: "Could not fetch recent checks" });
   }
 }
