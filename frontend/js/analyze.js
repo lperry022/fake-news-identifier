@@ -11,6 +11,7 @@ const elScoreTxt= $('#scoreText');
 const elVerdict = $('#verdictBadge');
 const elSource  = $('#sourceBadge');
 const elFlags   = $('#flagsList');
+const elHighlight = $('#highlightedText');   // 👈 add a div/span in HTML to display highlighted text
 
 let debounceId;
 const debounce = (fn, ms=400)=>{ clearTimeout(debounceId); debounceId=setTimeout(fn, ms); };
@@ -78,6 +79,11 @@ function renderFlags(keywords=[], facts=[]){
   });
 }
 
+function renderHighlight(htmlText) {
+  if (!elHighlight) return;
+  elHighlight.innerHTML = htmlText || '';
+}
+
 async function analyzeNow(){
   const val = (elInput.value || '').trim();
   if (!val){ toast('Please enter a headline or URL.'); elInput.focus(); return; }
@@ -91,6 +97,7 @@ async function analyzeNow(){
     renderScore(data.score ?? 0);
     renderSource(data.source);
     renderFlags(data.keywords || [], data.facts || []);
+    renderHighlight(data.highlightedText);   // 👈 NEW
     show(elResult, true);
   }catch(err){
     console.error(err);
@@ -103,7 +110,6 @@ async function analyzeNow(){
 
 // events
 elBtn?.addEventListener('click', analyzeNow);
-// optional: auto-analyze when user pauses typing
 elInput?.addEventListener('input', () => debounce(() => {
   const v = (elInput.value || '').trim();
   if (v.length >= 8) analyzeNow();

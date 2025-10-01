@@ -1,20 +1,39 @@
-# never commit secrets or deps
+# ========================
+# Node.js / Mongo Project
+# ========================
+
+# Environment variables
 .env
 **/.env
+
+# Node modules (dependencies)
 node_modules/
 **/node_modules/
+
+# Logs
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs/
+*.log
 
-# ignore these backend folders completely
-/backend/config/
-backend/config/
-backend/controllers/
-backend/middleware/
-backend/models/
-backend/routes/
-backend/scripts/
-backend/sockets/
+# Coverage / test outputs
+coverage/
+*.lcov
 
-# Node & macOS
-node_modules/
+# Build / dist output
+dist/
+build/
+
+# OS-specific files
 .DS_Store
+Thumbs.db
+
+# Editor-specific
+.vscode/
+.idea/
+
+# ========================
+# ✅ Allow backend source code
+# Do NOT ignore models, scripts, controllers, etc.
+# ========================

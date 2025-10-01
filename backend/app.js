@@ -14,7 +14,6 @@ import authRouter from "./routes/authRoutes.js";
 import profileRouter from "./routes/profileRoutes.js";
 import { analyzeRouter } from "./routes/analyzeRoutes.js";
 import { initSockets } from "./sockets/initSockets.js";
-import userRoutes from "./routes/user.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,7 +76,6 @@ export function buildApp({ useMemorySession = false } = {}) {
   app.use("/auth", authRouter);
   app.use("/profile", profileRouter);
   app.use("/api/analyze", analyzeRouter);
-  app.use("/user", userRoutes);
 
   // Optional sockets
   const attachSockets = (server) => {
