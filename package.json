@@ -7,7 +7,7 @@
     "dev": "node backend/server.js",
     "start": "node backend/server.js",
     "test": "NODE_ENV=test node --test --experimental-test-coverage",
-    "seed:keywords": "node backend/scripts/seedKeywords.js"
+    "seed:keywords": "node backend/scripts/seedKeywords.js"  
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
