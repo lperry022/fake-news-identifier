@@ -86,7 +86,7 @@ export async function analyze(req, res) {
       await AnalysisLog.create({
         userId: req.session?.userId || undefined,
         input: inputRaw,
-        inputType: domain ? "url" : "headline",
+        inputType: domain ? "url" : "text", // ✅ normalize "headline" to "text"
         domain,
         sourceLabel,
         verdict,
@@ -100,10 +100,9 @@ export async function analyze(req, res) {
     // Save to user’s history (if Check model exists)
     if (req.session?.userId) {
       try {
-        // ⚠️ Only works if you actually have backend/models/Check.js
         await Check.create({
           userId: req.session.userId,
-          inputType: domain ? "url" : "headline",
+          inputType,
           inputText: domain ? "" : inputRaw,
           inputUrl: domain ? inputRaw : "",
           score,
