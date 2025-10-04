@@ -4,9 +4,17 @@ import mongoose from "mongoose";
 const AnalysisLogSchema = new mongoose.Schema({
   userId: { type: mongoose.Types.ObjectId, ref: "User" },
   input: { type: String, required: true },
-  inputType: { type: String, enum: ["url","headline"], required: true },
+  inputType: { 
+    type: String, 
+    enum: ["url", "headline", "text"], // ✅ added "text"
+    required: true 
+  },
   domain: { type: String },
-  sourceLabel: { type: String, enum: ["Trusted","Untrusted","Unknown"], default: "Unknown" },
+  sourceLabel: { 
+    type: String, 
+    enum: ["Trusted","Untrusted","Unknown"], 
+    default: "Unknown" 
+  },
   verdict: { type: String, required: true },
   score:   { type: Number, min:0, max:100, required: true },
   flags:   { type: [String], default: [] }
