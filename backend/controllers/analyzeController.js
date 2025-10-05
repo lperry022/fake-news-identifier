@@ -1,7 +1,8 @@
 // backend/controllers/analyzeController.js
 import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-import Check from "../models/Check.js";
+// ⚠️ You also need a Check model if you want to save history (your folder doesn’t have one now).
+// import { Check } from "../models/Check.js";  // create this later if needed
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
@@ -82,7 +83,7 @@ export async function analyze(req, res) {
 
     // Log every analysis
     try {
-      const saved = await AnalysisLog.create({
+      await AnalysisLog.create({
         userId: req.session?.userId || undefined,
         input: inputRaw,
         inputType: domain ? "url" : "text", // ✅ normalize "headline" to "text"
@@ -92,7 +93,6 @@ export async function analyze(req, res) {
         score,
         flags
       });
-      console.log("✅ Saved AnalysisLog:", saved._id, saved.input);  // 🔹 Debug log here
     } catch (e) {
       console.error("AnalysisLog create failed:", e);
     }
@@ -100,6 +100,7 @@ export async function analyze(req, res) {
     // Save to user’s history (if Check model exists)
     if (req.session?.userId) {
       try {
+        // ⚠️ Only works if you actually have backend/models/Check.js
         await Check.create({
           userId: req.session.userId,
           inputType,
@@ -126,29 +127,5 @@ export async function analyze(req, res) {
   } catch (err) {
     console.error("ANALYZE_ERROR:", err);
     return res.status(500).json({ error: "Internal error" });
-  }
-}
-
-export async function getRecentChecks(req, res) {
-  try {
-    const limit = Math.min(parseInt(req.query.limit || "5", 10), 50);
-
-    const rows = await AnalysisLog.find({})
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .select("createdAt input score sourceLabel")
-      .lean();
-
-    const items = rows.map(r => ({
-      createdAt: r.createdAt,
-      input: r.input,
-      score: r.score,
-      source: r.sourceLabel || "Unknown",
-    }));
-
-    res.json(items);
-  } catch (err) {
-    console.error("RECENT_CHECKS_ERROR:", err);
-    res.status(500).json({ error: "Could not fetch recent checks" });
   }
 }
