@@ -1,7 +1,8 @@
 // backend/controllers/analyzeController.js
 import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-import Check from "../models/Check.js";
+// ⚠️ You also need a Check model if you want to save history (your folder doesn’t have one now).
+// import { Check } from "../models/Check.js";  // create this later if needed
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
@@ -34,6 +35,17 @@ function keywordFlags(text) {
   return SENSATIONAL.filter(k => t.includes(k)).map(k => `Contains keyword: "${k}"`);
 }
 
+// NEW: highlight words in text with <mark>
+function highlightKeywords(text, keywords) {
+  if (!text) return "";
+  let highlighted = text;
+  keywords.forEach(k => {
+    const regex = new RegExp(`\\b(${k})\\b`, "gi");
+    highlighted = highlighted.replace(regex, `<mark>$1</mark>`);
+  });
+  return highlighted;
+}
+
 function scoreFrom(sourceLabel, flagsCount) {
   let s = 50;
   if (sourceLabel === "Trusted") s += 30;
@@ -63,12 +75,15 @@ export async function analyze(req, res) {
     }
 
     const flags = keywordFlags(inputRaw);
+    const keywords = SENSATIONAL.filter(k => inputRaw.toLowerCase().includes(k));
+    const highlightedText = highlightKeywords(inputRaw, keywords);
+
     const score = scoreFrom(sourceLabel, flags.length);
     const verdict = verdictFrom(score);
 
-    // Log every analysis (optional but nice to keep)
+    // Log every analysis
     try {
-      const saved = await AnalysisLog.create({
+      await AnalysisLog.create({
         userId: req.session?.userId || undefined,
         input: inputRaw,
         inputType: domain ? "url" : "headline",
@@ -78,14 +93,14 @@ export async function analyze(req, res) {
         score,
         flags
       });
-      console.log("✅ Saved AnalysisLog:", saved._id, saved.input);  // 🔹 Debug log here
     } catch (e) {
       console.error("AnalysisLog create failed:", e);
     }
 
-    // Save to user's history for dashboard (only if logged in)
+    // Save to user’s history (if Check model exists)
     if (req.session?.userId) {
       try {
+        // ⚠️ Only works if you actually have backend/models/Check.js
         await Check.create({
           userId: req.session.userId,
           inputType: domain ? "url" : "headline",
@@ -101,33 +116,16 @@ export async function analyze(req, res) {
       }
     }
 
-    return res.json({ verdict, score, sourceLabel, flags, domain });
+    return res.json({ 
+      verdict, 
+      score, 
+      sourceLabel, 
+      flags, 
+      domain, 
+      highlightedText  // 👈 send highlighted version
+    });
   } catch (err) {
     console.error("ANALYZE_ERROR:", err);
     return res.status(500).json({ error: "Internal error" });
-  }
-}
-
-export async function getRecentChecks(req, res) {
-  try {
-    const limit = Math.min(parseInt(req.query.limit || "5", 10), 50);
-
-    const rows = await AnalysisLog.find({})
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .select("createdAt input score sourceLabel")
-      .lean();
-
-    const items = rows.map(r => ({
-      createdAt: r.createdAt,
-      input: r.input,
-      score: r.score,
-      source: r.sourceLabel || "Unknown",
-    }));
-
-    res.json(items);
-  } catch (err) {
-    console.error("RECENT_CHECKS_ERROR:", err);
-    res.status(500).json({ error: "Could not fetch recent checks" });
   }
 }
