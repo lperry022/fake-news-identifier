@@ -1,8 +1,6 @@
 // backend/controllers/analyzeController.js
 import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-// ⚠️ You also need a Check model if you want to save history (your folder doesn’t have one now).
-// import { Check } from "../models/Check.js";  // create this later if needed
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
