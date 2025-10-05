@@ -29,7 +29,8 @@ function verdictFromScore(n){
 
 async function callAnalyze(input){
   const payload = { input, type: /^https?:\/\//i.test(input) ? 'url' : 'headline' };
-  const res = await fetch('/api/analyze', {
+  const res = await fetch('http://localhost:3000/api/analyze', {
+
     method: 'POST',
     headers: { 'Content-Type':'application/json' },
     body: JSON.stringify(payload)
@@ -79,34 +80,73 @@ function renderFlags(keywords=[], facts=[]){
   });
 }
 
+
 function renderHighlight(htmlText) {
   if (!elHighlight) return;
   elHighlight.innerHTML = htmlText || '';
 }
+let chart;
+
 
 async function analyzeNow(){
   const val = (elInput.value || '').trim();
-  if (!val){ toast('Please enter a headline or URL.'); elInput.focus(); return; }
+  if (!val){ 
+    toast('Please enter a headline or URL.'); 
+    elInput.focus(); 
+    return; 
+  }
 
   show(elLoader, true);
   show(elResult, false);
   elBtn.disabled = true;
+  await loadRecentChecks();
 
-  try{
+
+  try {
     const data = await callAnalyze(val);
+
+    // Render team’s results
     renderScore(data.score ?? 0);
     renderSource(data.source);
     renderFlags(data.keywords || [], data.facts || []);
     renderHighlight(data.highlightedText);   // 👈 NEW
     show(elResult, true);
-  }catch(err){
+
+    //pie chart directly from credibility score
+    const score = data.score ?? 0;
+    const fakePart = 100 - score;
+    const realPart = score;
+
+    const ctx = document.getElementById("headlineChart").getContext("2d");
+    if (chart) chart.destroy();
+    chart = new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: ["Fake %", "Real %"],
+        datasets: [{
+          data: [fakePart, realPart],
+          backgroundColor: ["#e53935", "#43a047"]
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: "top" },
+          title: { display: true, text: "Credibility Score Breakdown" }
+        }
+      }
+    });
+
+  } catch(err) {
     console.error(err);
     toast('Unable to analyze at the moment. Please try again.');
-  }finally{
+  } finally {
     show(elLoader, false);
     elBtn.disabled = false;
   }
 }
+
+
 
 // events
 elBtn?.addEventListener('click', analyzeNow);
@@ -114,3 +154,36 @@ elInput?.addEventListener('input', () => debounce(() => {
   const v = (elInput.value || '').trim();
   if (v.length >= 8) analyzeNow();
 }, 600));
+
+
+async function loadRecentChecks() {
+  try {
+    const res = await fetch("http://localhost:3000/api/analyze/recent");
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const items = await res.json();
+
+    const table = document.getElementById("recentTable");
+    table.innerHTML = "";
+
+    if (!items.length) {
+      table.innerHTML = `<tr><td colspan="4" class="grey-text center-align">No recent checks yet.</td></tr>`;
+      return;
+    }
+
+    for (const r of items) {
+      const tr = document.createElement("tr");
+      const d = new Date(r.createdAt).toLocaleString();
+      tr.innerHTML = `
+        <td>${d}</td>
+        <td>${r.input}</td>
+        <td>${r.score}</td>
+        <td>${r.source}</td>
+      `;
+      table.appendChild(tr);
+    }
+  } catch (err) {
+    console.error("RECENT_CHECKS_ERROR:", err);
+  }
+}
+
+loadRecentChecks();
