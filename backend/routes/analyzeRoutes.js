@@ -1,7 +1,7 @@
-// backend/routes/analyzeRoutes.js
 import { Router } from "express";
-import { analyze } from "../controllers/analyzeController.js";
-import { validate, analyzeSchema } from "../middleware/validate.js";
+import { analyze, getRecentChecks } from "../controllers/analyzeController.js";
 
 export const analyzeRouter = Router();
-analyzeRouter.post("/", validate(analyzeSchema), analyze);
+
+analyzeRouter.post("/", analyze);
+analyzeRouter.get("/recent", getRecentChecks);

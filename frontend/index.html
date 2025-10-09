@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="css/styles.css?v=5">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <!-- JS (framework + app init) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
   <script src="js/app.js" defer></script>
@@ -71,6 +73,14 @@
         </p>
       </div>
     </section>
+<div id="chartSection" class="card center-align" style="margin-top:20px; padding:15px;">
+  <h6>Keyword Analysis</h6>
+  <div style="width:300px; height:300px; margin:0 auto;">
+    <canvas id="headlineChart"></canvas>
+  </div>
+</div>
+
+
 
     <!-- How (3 cards) — UNCHANGED -->
     <section id="how" class="info-grid">

@@ -2,8 +2,10 @@
 import { z } from "zod";
 
 export const analyzeSchema = z.object({
-  input: z.string().min(1, "Input is required")
+  input: z.string().min(1, "Input is required"),
+  type: z.enum(["url", "headline"]).optional()
 });
+
 
 export function validate(schema) {
   return (req, res, next) => {
