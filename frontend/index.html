@@ -6,23 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Fake News Identifier</title>
 
-  <!-- CSS: Materialize then our styles (order matters) -->
+  <!-- CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <link rel="stylesheet" href="css/styles.css?v=5">
+  <link rel="stylesheet" href="css/styles.css?v=6">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- JS (framework + app init) -->
+  <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" defer></script>
   <script src="js/app.js" defer></script>
 </head>
 <body class="theme-dark" id="home">
 
   <!-- NAV -->
-<div id="navbar-container"></div>
+  <div id="navbar-container"></div>
 
-  <!-- HERO (unchanged) -->
+  <!-- HERO -->
   <header class="hero container">
     <h1 class="hero-title">Fake News Identifier</h1>
 
@@ -38,7 +38,7 @@
   <!-- MAIN -->
   <main class="container main-wrap">
 
-    <!-- loader (unchanged) -->
+    <!-- Loader -->
     <section id="loader" class="center-align" style="display:none" aria-live="polite">
       <div class="preloader-wrapper active" aria-hidden="true">
         <div class="spinner-layer spinner-white-only">
@@ -50,7 +50,7 @@
       <p class="grey-text">Analyzing…</p>
     </section>
 
-    <!-- results (unchanged) -->
+    <!-- Results -->
     <section id="result" class="card result-card" style="display:none" aria-live="polite">
       <div class="card-content white-text">
         <h6 class="section-label">Verdict</h6>
@@ -68,21 +68,27 @@
         <h6 class="section-label">Flags</h6>
         <ul id="flagsList" class="collection dark-collection"></ul>
 
+        <!-- 🟨 Highlighted Text Section -->
+        <div id="highlightSection" style="display:none; margin-top:15px;">
+          <h6 class="section-label">Highlighted Text</h6>
+          <p id="highlightedText" class="highlight-output"></p>
+        </div>
+
         <p class="grey-text text-lighten-1" style="margin-top:12px">
           ⚠️ Credibility scores are advisory only. See <a href="/frontend/help.html">Help</a> for how we score.
         </p>
       </div>
     </section>
-<div id="chartSection" class="card center-align" style="margin-top:20px; padding:15px;">
-  <h6>Keyword Analysis</h6>
-  <div style="width:300px; height:300px; margin:0 auto;">
-    <canvas id="headlineChart"></canvas>
-  </div>
-</div>
 
+    <!-- Keyword chart -->
+    <div id="chartSection" class="card center-align" style="margin-top:20px; padding:15px;">
+      <h6>Keyword Analysis</h6>
+      <div style="width:300px; height:300px; margin:0 auto;">
+        <canvas id="headlineChart"></canvas>
+      </div>
+    </div>
 
-
-    <!-- How (3 cards) — UNCHANGED -->
+    <!-- Info cards -->
     <section id="how" class="info-grid">
       <div class="info-card card"><div class="card-content">
         <span class="card-title"><i class="material-icons icon-round">search</i> 1) Input</span>
@@ -90,7 +96,7 @@
       </div></div>
       <div class="info-card card"><div class="card-content">
         <span class="card-title"><i class="material-icons icon-round">insights</i> 2) Checks</span>
-        <p>We check for <em>sensational keywords</em>, <em>source reputation</em> (trusted/untrusted/unknown), and (optionally) a fact-check API.</p>
+        <p>We check for <em>sensational keywords</em>, <em>source reputation</em>, and (optionally) a fact-check API.</p>
       </div></div>
       <div class="info-card card"><div class="card-content">
         <span class="card-title"><i class="material-icons icon-round">verified</i> 3) Result</span>
@@ -98,9 +104,7 @@
       </div></div>
     </section>
 
-    <!-- ===== NEW CONTENT BELOW THE 3 CARDS ===== -->
-
-    <!-- Fast Stats (animated) -->
+    <!-- Stats -->
     <section class="section">
       <div class="row stat-row">
         <div class="col s12 m4">
@@ -130,14 +134,12 @@
       </div>
     </section>
 
-    <!-- Recent checks -->
+    <!-- Recent Checks -->
     <section class="card section-block">
       <div class="card-content">
         <span class="card-title"><i class="material-icons left">history</i>Recent checks</span>
         <table class="highlight responsive-table">
-          <thead>
-            <tr><th>When</th><th>Input</th><th>Score</th><th>Source</th></tr>
-          </thead>
+          <thead><tr><th>When</th><th>Input</th><th>Score</th><th>Source</th></tr></thead>
           <tbody id="recentTable">
             <tr><td colspan="4" class="grey-text center-align">Loading…</td></tr>
           </tbody>
@@ -148,7 +150,7 @@
       </div>
     </section>
 
-    <!-- Feature highlights -->
+    <!-- Features -->
     <section class="section-block card">
       <div class="card-content">
         <span class="card-title">Why people use it</span>
@@ -189,9 +191,27 @@
     <div class="container">© 2025 Group 11 · Fake News Identifier · Built with Materialize & Vanilla JS</div>
   </footer>
 
-  <!-- Page scripts -->
-<script src="/frontend/js/navbar.js?v=4"></script>
+  <!-- Scripts -->
+  <script src="/frontend/js/navbar.js?v=4"></script>
   <script src="js/analyze.js"></script>
   <script src="js/home-widgets.js"></script>
+
+  <!-- 🟨 Keyword Highlight Logic -->
+  <script>
+    window.KeywordHighlighter = (function () {
+      const keywords = [
+        "shocking", "secret", "breaking", "revealed", "fake",
+        "miracle", "urgent", "warning", "alert", "exclusive",
+        "you won’t believe", "scandal", "unbelievable"
+      ];
+
+      function highlightText(text) {
+        const regex = new RegExp("\\b(" + keywords.join("|") + ")\\b", "gi");
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      }
+
+      return { highlightText };
+    })();
+  </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-// frontend/js/analyze.js — FINAL FIXED VERSION (for logged-in + logged-out users)
+// frontend/js/analyze.js — FINAL VERSION (with Highlight Feature for homepage)
 
 const $ = (s) => document.querySelector(s);
 const toast = (msg) => (window.M && M.toast) ? M.toast({ html: msg }) : alert(msg);
@@ -16,6 +16,10 @@ const elScoreTxt = $('#scoreText');
 const elVerdict  = $('#verdictBadge');
 const elSource   = $('#sourceBadge');
 const elFlags    = $('#flagsList');
+
+// ✨ Highlight section (added)
+const elHighlightSection = document.getElementById("highlightSection");
+const elHighlightedText  = document.getElementById("highlightedText");
 
 let debounceId;
 const debounce = (fn, ms = 400) => { clearTimeout(debounceId); debounceId = setTimeout(fn, ms); };
@@ -96,6 +100,17 @@ function renderFlags(flags = [], facts = []) {
   }
 }
 
+// 🟡 Keyword highlighting logic
+function highlightKeywords(text) {
+  if (!text) return '';
+  const keywords = [
+    'shocking', 'secret', 'breaking', 'miracle', 'banned', 'revealed',
+    'hidden', 'truth', 'warning', 'alert', 'scandal', 'hoax', 'exposed'
+  ];
+  const regex = new RegExp(`\\b(${keywords.join('|')})\\b`, 'gi');
+  return text.replace(regex, '<span class="highlight">$1</span>');
+}
+
 let chart;
 
 async function analyzeNow() {
@@ -118,6 +133,13 @@ async function analyzeNow() {
     renderScore(data.score ?? 0);
     renderSource(data.source);
     renderFlags(data.flags || [], data.facts || []);
+
+    // ✅ Highlight keywords from input
+    if (elHighlightedText && elHighlightSection) {
+      elHighlightedText.innerHTML = highlightKeywords(val);
+      show(elHighlightSection, true);
+    }
+
     show(elResult, true);
 
     // Pie chart: fake vs real
@@ -196,7 +218,7 @@ async function loadRecentChecks() {
   }
 }
 
-// 🔹 Quick session test (to verify login)
+// 🔹 Quick session test
 (async () => {
   try {
     const res = await fetch(`${API_BASE}/profile/session`, { credentials: 'include' });

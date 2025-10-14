@@ -19,6 +19,21 @@
   <main class="container" style="margin-top:24px; margin-bottom:48px;">
     <h1 class="auth-hero">Your Dashboard</h1>
 
+    <!-- ✅ Keyword Highlight Section (added) -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-content white-text">
+        <span class="card-title">Highlighted Keywords</span>
+        <p>These words will be automatically highlighted in yellow within your dashboard content.</p>
+        <div class="input-field">
+          <input id="keyword-input" type="text" placeholder="Enter keywords separated by commas, e.g., fake, news, alert">
+          <label for="keyword-input">Highlight Keywords</label>
+        </div>
+        <a id="btn-apply-highlight" class="btn waves-effect waves-light">
+          <i class="material-icons left">highlight</i>Apply Highlight
+        </a>
+      </div>
+    </div>
+
     <!-- Summary cards -->
     <div class="row" id="summary-row" style="margin-top:8px;">
       <div class="col s12 m4">
@@ -75,7 +90,10 @@
       </div>
     </div>
 
-    <div id="history-grid" class="row" style="margin-top:8px;"></div>
+    <!-- ✅ Highlight target area -->
+    <div id="dashboard-content" class="row" style="margin-top:8px;">
+      <div id="history-grid" class="col s12"></div>
+    </div>
 
     <div class="center-align" style="margin-top:8px;">
       <a id="btn-load-more" class="btn-flat waves-effect" style="display:none;">
