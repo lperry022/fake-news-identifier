@@ -1,13 +1,16 @@
-import { Source } from "../models/source.js";
+// backend/controllers/analyzeController.js
+import { Source } from "../models/source.js";          // ← match file case
 import { AnalysisLog } from "../models/AnalysisLog.js";
-import Check from "../models/Check.js";
+// ⚠️ You also need a Check model if you want to save history (your folder doesn’t have one now).
+// import { Check } from "../models/Check.js";  // create this later if needed
 
 const SENSATIONAL = [
   "breaking","shocking","secret","exposed","banned","miracle",
   "guaranteed","you won't believe","truth","debunked","cover-up","leaked"
 ];
 
-// --- Helper: extract domain ---
+// Accepts full URLs (http/https), "bbc.com/news", etc.
+// Normalizes m./www. and returns hostname; null if not a URL/domain.
 function extractDomain(input) {
   if (!input) return null;
   const raw = String(input).trim();
@@ -16,26 +19,33 @@ function extractDomain(input) {
     try {
       const u = new URL(raw);
       return u.hostname.replace(/^m\./i,"").replace(/^www\./i,"").toLowerCase();
-    } catch { return null; }
+    } catch { /* fall through */ }
   }
-
   if (!/\s/.test(raw) && raw.includes(".")) {
     try {
       const u = new URL(`https://${raw}`);
       return u.hostname.replace(/^m\./i,"").replace(/^www\./i,"").toLowerCase();
-    } catch { return null; }
+    } catch { /* fall through */ }
   }
-
-  return null;
+  return null; // treat as headline
 }
 
-// --- Helper: find sensational keywords ---
 function keywordFlags(text) {
   const t = (text || "").toLowerCase();
   return SENSATIONAL.filter(k => t.includes(k)).map(k => `Contains keyword: "${k}"`);
 }
 
-// --- Helper: scoring & verdict ---
+// NEW: highlight words in text with <mark>
+function highlightKeywords(text, keywords) {
+  if (!text) return "";
+  let highlighted = text;
+  keywords.forEach(k => {
+    const regex = new RegExp(`\\b(${k})\\b`, "gi");
+    highlighted = highlighted.replace(regex, `<mark>$1</mark>`);
+  });
+  return highlighted;
+}
+
 function scoreFrom(sourceLabel, flagsCount) {
   let s = 50;
   if (sourceLabel === "Trusted") s += 30;
@@ -50,7 +60,6 @@ function verdictFrom(score) {
   return "Likely Credible";
 }
 
-// --- MAIN: analyze route ---
 export async function analyze(req, res) {
   try {
     const inputRaw = (req.body?.input || "").trim();
@@ -58,7 +67,7 @@ export async function analyze(req, res) {
 
     const domain = extractDomain(inputRaw);
 
-    // check source credibility
+    // look up source reputation
     let sourceLabel = "Unknown";
     if (domain) {
       const src = await Source.findOne({ domain }).lean();
@@ -66,12 +75,15 @@ export async function analyze(req, res) {
     }
 
     const flags = keywordFlags(inputRaw);
+    const keywords = SENSATIONAL.filter(k => inputRaw.toLowerCase().includes(k));
+    const highlightedText = highlightKeywords(inputRaw, keywords);
+
     const score = scoreFrom(sourceLabel, flags.length);
     const verdict = verdictFrom(score);
 
-    // log in AnalysisLog (for everyone)
+    // Log every analysis
     try {
-      const log = await AnalysisLog.create({
+      await AnalysisLog.create({
         userId: req.session?.userId || undefined,
         input: inputRaw,
         inputType: domain ? "url" : "headline",
@@ -81,17 +93,15 @@ export async function analyze(req, res) {
         score,
         flags
       });
-      console.log(
-        ` Saved AnalysisLog: new ObjectId('${log._id}') | "${inputRaw}" | Score: ${score} | Verdict: ${verdict}`
-      );
     } catch (e) {
-      console.error(" AnalysisLog save failed:", e);
+      console.error("AnalysisLog create failed:", e);
     }
 
-    // log in Check (for user dashboard)
+    // Save to user’s history (if Check model exists)
     if (req.session?.userId) {
       try {
-        const check = await Check.create({
+        // ⚠️ Only works if you actually have backend/models/Check.js
+        await Check.create({
           userId: req.session.userId,
           inputType: domain ? "url" : "headline",
           inputText: domain ? "" : inputRaw,
@@ -101,62 +111,21 @@ export async function analyze(req, res) {
           sourceLabel,
           meta: { domain, verdict }
         });
-        console.log(
-          `👤 Saved Check for user ${req.session.userId}: new ObjectId('${check._id}') | "${inputRaw}"`
-        );
       } catch (e) {
-        console.error("Check save failed:", e);
+        console.error("Check create failed:", e);
       }
     }
 
-    return res.json({ verdict, score, sourceLabel, flags, domain });
-  } catch (err) {
-    console.error(" ANALYZE_ERROR:", err);
-    return res.status(500).json({ error: "Internal error" });
-  }
-}
-
-// --- DASHBOARD DATA ROUTE ---
-export async function getRecentChecks(req, res) {
-  try {
-    const userId = req.session?.userId;
-    let rows;
-
-    if (userId) {
-      rows = await Check.find({ userId })
-        .sort({ createdAt: -1 })
-        .limit(20)
-        .select("createdAt inputText inputUrl score sourceLabel flags meta")
-        .lean();
-    } else {
-      rows = await AnalysisLog.find({})
-        .sort({ createdAt: -1 })
-        .limit(20)
-        .select("createdAt input score sourceLabel flags verdict")
-        .lean();
-    }
-
-    const items = rows.map(r => {
-      const headline =
-        (r.inputText && r.inputText.trim()) ||
-        (r.inputUrl && r.inputUrl.trim()) ||
-        (r.input && r.input.trim()) ||
-        "(headline)";
-
-      return {
-        createdAt: r.createdAt,
-        input: headline,
-        score: r.score ?? 0,
-        source: r.sourceLabel || "Unknown",
-        flags: r.flags || [],
-        verdict: r.meta?.verdict || r.verdict || "—"
-      };
+    return res.json({ 
+      verdict, 
+      score, 
+      sourceLabel, 
+      flags, 
+      domain, 
+      highlightedText  // 👈 send highlighted version
     });
-
-    console.log(`Sent ${items.length} dashboard items${userId ? ` for user ${userId}` : ""}`);
-    res.json(items);
   } catch (err) {
-    console.error("RECENT_CHECKS_ERROR:", err);
-    res.status(500).json({ error: "Could not fetch recent checks" });
+    console.error("ANALYZE_ERROR:", err);
+    return res.status(500).json({ error: "Internal error" });
   }
 }
